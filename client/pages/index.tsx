@@ -1,5 +1,15 @@
+import React from 'react'
+import { Normalize } from 'styled-normalize'
+
+import App from '../components/App'
+
 function HomePage() {
-  return <div>EZ Audit!</div>;
+  return (
+    <React.Fragment>
+      <Normalize />
+      <App />
+    </React.Fragment>
+  )
 }
 
-export default HomePage;
+export default HomePage

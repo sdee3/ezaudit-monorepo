@@ -1,5 +1,14 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import styled from 'styled-components'
+
+const AppHeader = styled.h1`
+  color: blue;
+`
 
 export default function App() {
-  return <div>EZ AUDIT!!!</div>
+  return (
+    <Fragment>
+      <AppHeader>EZ AUDIT!!!</AppHeader>
+    </Fragment>
+  )
 }

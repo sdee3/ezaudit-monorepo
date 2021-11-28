@@ -1,14 +1,16 @@
-import React from 'react'
-import { Normalize } from 'styled-normalize'
+import Head from 'next/head'
+import React, { Fragment } from 'react'
 
 import App from '../components/App'
 
 function HomePage() {
   return (
-    <React.Fragment>
-      <Normalize />
+    <Fragment>
+      <Head>
+        <title>EZ Audit</title>
+      </Head>
       <App />
-    </React.Fragment>
+    </Fragment>
   )
 }
 

@@ -16,4 +16,5 @@ yarn-error.log
 /.idea
 /.vscode
 /client/.next
+/client/out
 .DS_Store

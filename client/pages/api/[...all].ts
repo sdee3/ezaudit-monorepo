@@ -3,7 +3,7 @@ import httpProxyMiddleware from 'next-http-proxy-middleware'
 
 const middleware = (req: NextApiRequest, res: NextApiResponse) =>
   httpProxyMiddleware(req, res, {
-    target: 'http://localhost:8000',
+    target: process.env.API_URL,
   })
 
 export default middleware

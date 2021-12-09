@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Dzava\Lighthouse\Lighthouse;
+use App\Jobs\ProcessAudit;
 
 class AuditController extends Controller
 {
@@ -30,15 +30,9 @@ class AuditController extends Controller
 			$correctDomain = "https://" . $domainFromRequest;
 
 		try {
-			(new Lighthouse())
-				->setLighthousePath('../node_modules/lighthouse/lighthouse-cli/index.js')
-				->setNodePath(env('APP_NODE_PATH'))
-				->setOutput('./storage/' . date('Y-m-d_H:i:s') . '-' . str_replace('https://', '', $correctDomain) . '-report.json')
-				->accessibility()
-				->bestPractices()
-				->performance()
-				->seo()
-				->audit($correctDomain);
+			$auditJob = new ProcessAudit($correctDomain);
+			dispatch($auditJob);
+			return Response()->json(['output' => 'Audit scheduled successfully!'], 200);
 		} catch (\Throwable $th) {
 			report($th);
 
@@ -46,7 +40,5 @@ class AuditController extends Controller
 				'message' => 'Error while processing! Please try again.'
 			], 404);
 		}
-
-		return Response()->json(['output' => 'Command passed'], 200);
 	}
 }

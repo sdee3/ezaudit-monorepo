@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://ezaudit.me'],
+    'allowed_origins' => [env('APP_ENV') === 'local' ? '*' : 'https://ezaudit.me'],
 
     'allowed_origins_patterns' => [],
 

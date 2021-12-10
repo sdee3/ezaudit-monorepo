@@ -1,13 +1,13 @@
 {
   "private": true,
   "scripts": {
-    "dev": "concurrently \"php artisan serve\" \"cd client && yarn dev\"",
+    "dev": "concurrently \"php artisan serve\" \"php artisan queue:listen\" \"cd client && yarn dev\"",
     "development": "mix",
     "watch": "mix watch",
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
-    "prod": "npm run production",
-    "production": "mix --production"
+    "prod": "mix --production",
+    "build": "concurrently \"cd client && yarn build\""
   },
   "devDependencies": {
     "axios": "^0.21",

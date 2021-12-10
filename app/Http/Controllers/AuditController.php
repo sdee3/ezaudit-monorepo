@@ -30,8 +30,7 @@ class AuditController extends Controller
 			$correctDomain = "https://" . $domainFromRequest;
 
 		try {
-			$auditJob = new ProcessAudit($correctDomain);
-			dispatch($auditJob);
+			ProcessAudit::dispatch($correctDomain);
 			return Response()->json(['output' => 'Audit scheduled successfully!'], 200);
 		} catch (\Throwable $th) {
 			report($th);

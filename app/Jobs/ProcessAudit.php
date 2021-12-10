@@ -43,7 +43,7 @@ class ProcessAudit implements ShouldQueue
                 ->seo()
                 ->audit($this->domainToAudit);
         } catch (\Dzava\Lighthouse\Exceptions\AuditFailedException $e) {
-            report($e->getOutput());
+            return $e->getOutput();
         }
     }
 }

@@ -28,6 +28,23 @@ class ProcessAudit implements ShouldQueue
     }
 
     /**
+     * Cleans a requested URL by removing HTTP(s):// and 
+     * replacing all trailing slashes with dashes (-) or
+     * with an empty string if a slash is the last character.
+     */
+    private function cleanDomain(): string
+    {
+        $nonHttpUrl = str_replace('https://', '', $this->domainToAudit);
+        $cleanedNonHttpUrl = str_replace('/', '-', $nonHttpUrl);
+
+        if (str_ends_with($cleanedNonHttpUrl, '-')) {
+            return rtrim($cleanedNonHttpUrl, '-');
+        }
+
+        return $cleanedNonHttpUrl;
+    }
+
+    /**
      * Execute the job.
      *
      * @return void
@@ -36,7 +53,7 @@ class ProcessAudit implements ShouldQueue
     {
         try {
             $dateOfAudit = date('Y-m-d_H:i:s');
-            $outputPath = env('APP_PATH') . '/storage/' . $dateOfAudit . '-' . str_replace('https://', '', $this->domainToAudit) . '-report.json';
+            $outputPath = env('APP_PATH') . '/storage/' . $dateOfAudit . '-' . $this->cleanDomain() . '-report.json';
             $mailToSend = new AuditCompleted($dateOfAudit, $this->domainToAudit, $outputPath);
 
             (new Lighthouse())

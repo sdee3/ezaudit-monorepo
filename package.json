@@ -1,22 +1,28 @@
 {
+  "author": "Stefan Djokic (stefd996@gmail.com)",
+  "bugs": {
+    "url": "https://github.com/sdee3/ezaudit-monorepo/issues"
+  },
+  "homepage": "https://github.com/sdee3/ezaudit-monorepo#readme",
+  "license": "ISC",
+  "name": "ezaudit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdee3/ezaudit-monorepo.git"
+  },
   "private": true,
   "scripts": {
-    "dev": "concurrently \"php artisan serve\" \"php artisan queue:work\" \"cd client && yarn dev\"",
+    "dev": "concurrently \"php artisan serve\" \"php artisan queue:work\" \"cd client && pnpm dev\"",
     "development": "mix",
     "watch": "mix watch",
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "prod": "mix --production",
-    "build": "concurrently \"cd client && yarn build\""
+    "build": "concurrently \"cd client && pnpm build\""
   },
   "devDependencies": {
-    "axios": "^0.21",
     "concurrently": "^6.4.0",
-    "laravel-mix": "^6.0.6",
-    "lodash": "^4.17.19",
-    "postcss": "^8.1.14"
+    "laravel-mix": "^6.0.6"
   },
-  "dependencies": {
-    "lighthouse": "^9.1.0"
-  }
+  "version": "0.0.1"
 }

@@ -6,6 +6,11 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
   mailhog:
-    image: mailhog
+    image: mailhog/mailhog
     restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025

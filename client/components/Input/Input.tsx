@@ -45,7 +45,7 @@ export default function Input() {
             pattern: WEBSITE_REGEX_PATTERN,
           })}
         />
-        <input type="submit" />
+        <input data-cy="submitAuditBtn" type="submit" />
       </form>
       {errors.domain && <span>Not a valid website!</span>}
       {value !== null && JSON.stringify(value)}

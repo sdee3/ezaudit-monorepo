@@ -4,7 +4,7 @@
     "url": "https://github.com/sdee3/ezaudit-monorepo/issues"
   },
   "homepage": "https://github.com/sdee3/ezaudit-monorepo#readme",
-  "license": "ISC",
+  "license": "MIT",
   "name": "ezaudit",
   "repository": {
     "type": "git",

@@ -14,7 +14,10 @@ class ExampleTest extends TestCase
      */
     public function test_example()
     {
-        $response = $this->get('/');
+        $response = $this->post(
+            '/api/audit',
+            ['domain' => 'https://www.google.com']
+        );
 
         $response->assertStatus(200);
     }

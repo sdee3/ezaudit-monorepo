@@ -19,6 +19,7 @@ export default class MyDocument extends Document {
         ...initialProps,
         styles: (
           <>
+            {initialProps.styles}
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link
               rel="preconnect"
@@ -37,7 +38,6 @@ export default class MyDocument extends Document {
               crossOrigin="anonymous"
               referrerPolicy="no-referrer"
             />
-            {initialProps.styles}
             {sheet.getStyleElement()}
           </>
         ),
@@ -49,7 +49,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="en">
         <Head>
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script

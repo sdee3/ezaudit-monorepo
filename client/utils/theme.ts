@@ -1,16 +1,21 @@
-import { createGlobalStyle } from 'styled-components'
+import { extendTheme } from '@chakra-ui/react'
 
-const theme = {
+const theme = extendTheme({
   colors: {
-    primary: '#333',
+    primary: '#1976d2',
+    primaryDark: '#004ba0',
+    primaryLight: '#63a4ff',
+    black: '#000',
+    gray300: '#333',
+    gray600: '#666',
+    gray900: '#999',
+    white: '#fff',
   },
-}
-
-const GlobalStyle = createGlobalStyle`
-  body {
-    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Ubuntu, Cantarell, sans-serif;
-  }
-`
+  fonts: {
+    body: 'Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Ubuntu, Cantarell, sans-serif',
+    heading:
+      'Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Ubuntu, Cantarell, sans-serif',
+  },
+})
 
 export default theme
-export { GlobalStyle }

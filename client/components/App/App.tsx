@@ -1,17 +1,16 @@
-import React, { Fragment } from 'react'
-import styled from 'styled-components'
+import { Center, Container, Heading } from '@chakra-ui/react'
 
-import Input from '../Input'
+import AuditForm from '../AuditForm'
 
-const AppHeader = styled.h1`
-  color: blue;
-`
+const App = () => (
+  <Center>
+    <Container>
+      <Heading mb={10} textAlign="center">
+        EZ Audit
+      </Heading>
+      <AuditForm />
+    </Container>
+  </Center>
+)
 
-export default function App() {
-  return (
-    <Fragment>
-      <AppHeader>EZ AUDIT!!!</AppHeader>
-      <Input />
-    </Fragment>
-  )
-}
+export default App

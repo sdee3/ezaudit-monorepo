@@ -31,13 +31,13 @@ class AuditController extends Controller
 
 		try {
 			ProcessAudit::dispatch($correctDomain);
-			return Response()->json(['output' => 'Audit scheduled successfully!'], 200);
+			return Response()->json(['output' => 'Audit scheduled successfully! You will receive an email once the audit is ready.'], 202);
 		} catch (\Throwable $th) {
 			report($th);
 
 			return response()->json([
 				'message' => 'Error while processing! Please try again.'
-			], 404);
+			], 500);
 		}
 	}
 }

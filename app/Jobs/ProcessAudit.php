@@ -68,7 +68,7 @@ class ProcessAudit implements ShouldQueue
 
             Mail::to("stefd996@gmail.com")->send($mailToSend);
         } catch (\Dzava\Lighthouse\Exceptions\AuditFailedException $e) {
-            return $e->getOutput();
+            report($e->getOutput());
         }
     }
 }

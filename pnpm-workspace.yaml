@@ -1,0 +1,4 @@
+packages:
+  - "."
+  - "client/**"
+shared-workspace-lockfile: true

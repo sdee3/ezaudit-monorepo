@@ -53,7 +53,7 @@ class ProcessAudit implements ShouldQueue
     {
         try {
             $dateOfAudit = date('Y-m-d_H:i:s');
-            $outputPath = env('APP_PATH') . '/storage/' . $dateOfAudit . '-' . $this->cleanDomain() . '-report.json';
+            $outputPath = env('APP_PUBLIC_PATH') . '/storage/' . $dateOfAudit . '-' . $this->cleanDomain() . '-report.json';
             $mailToSend = new AuditCompleted($dateOfAudit, $this->domainToAudit, $outputPath);
 
             (new Lighthouse())

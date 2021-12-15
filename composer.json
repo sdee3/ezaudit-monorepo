@@ -31,7 +31,6 @@
   "name": "laravel/laravel",
   "prefer-stable": true,
   "require": {
-    "php": "^7.3|^8.0",
     "dzava/lighthouse": "^0.1.0",
     "fruitcake/laravel-cors": "^2.0",
     "guzzlehttp/guzzle": "^7.0.1",
@@ -39,6 +38,7 @@
     "laravel/sanctum": "^2.11",
     "laravel/tinker": "^2.5",
     "nyholm/psr7": "^1.4",
+    "php": "^7.3|^8.0",
     "symfony/psr-http-message-bridge": "^2.1"
   },
   "require-dev": {
@@ -56,6 +56,11 @@
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi"
+    ],
+    "post-install-cmd": [
+      "@php artisan key:generate",
+      "@php artisan storage:link",
+      "@php artisan migrate"
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

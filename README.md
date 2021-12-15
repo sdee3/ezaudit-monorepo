@@ -10,21 +10,27 @@ The next best thing after [Google Lighthouse](https://developers.google.com/web/
 * [Composer](https://getcomposer.org/)
 * Docker with Docker Compose
 * Node.js >= 16
-* [PNPM](https://pnpm.io/) installed globally
+* [PNPM](https://pnpm.io/) installed globally (`npm i -g pnpm`)
+* Lighthouse installed globally (`npm i -g lighthouse`)
 
-### Initializing the local development environment
+## Initializing the local development environment
 
 To get both Laravel and Next.js apps up and running, it's recommended to go through the following steps:
 
 1. Create a `.env` file both on the root and in `/client` (based on the example files) 📝
-2. `php artisan key:generate` 🔑
+   1. You have to set 3 path variables in Laravel's `.env`:
+      1. `APP_NODE_PATH` points to your Node.js executable. Find it by typing `which node` in your terminal
+      2. `APP_LIGHTHOUSE_PATH` points to your global installation of Lighthouse. It is usually `"/usr/local/lib/node_modules/lighthouse/lighthouse-cli/index.js"`
+      3. `APP_PUBLIC_PATH` is the absolute path to this project's **public** folder
+2. `docker-compose up --detach` 🎣
 3. `composer install` 🎶
-4. `docker-compose up --detach` 🎣
-5. `php artisan migrate` 🚶🏽
-6. `pnpm i` both on the root and in `/client` 🖥
-7. `cd client/ && pnpm build` to run the first build of the Next.js app 🥇
-8. `pnpm dev` on the project root to run the Laravel Serve command, the [Laravel queue listener](https://laravel.com/docs/8.x/queues), and the Next.js app with hot reloading 👂🏼
-9. `pnpm test` after starting the dev environment will open Cypress 🧪
+4. `pnpm i` 🖥
+
+After those steps, you will be able to do the following:
+
+* `pnpm build` to run the first build of the Next.js app 🥇
+* `pnpm dev` on the project root to run the Laravel Serve command, the [Laravel queue listener](https://laravel.com/docs/8.x/queues), and the Next.js app with hot reloading 👂🏼
+* `pnpm test` after starting the dev environment will open Cypress 🧪
 
 ## License
 

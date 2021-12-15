@@ -18,7 +18,9 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "prod": "mix --production",
-    "build": "concurrently \"cd client && pnpm build\""
+    "build": "concurrently \"cd client && pnpm build\"",
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "cd client && pnpm i"
   },
   "devDependencies": {
     "concurrently": "^6.4.0",

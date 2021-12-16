@@ -19,7 +19,8 @@
     "hot": "mix watch --hot",
     "prod": "mix --production",
     "build": "concurrently \"cd client && pnpm build\"",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "test": "concurrently \"cd client && pnpm test\""
   },
   "devDependencies": {
     "concurrently": "^6.4.0",

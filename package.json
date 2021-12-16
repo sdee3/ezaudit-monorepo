@@ -24,7 +24,8 @@
   },
   "devDependencies": {
     "concurrently": "^6.4.0",
-    "laravel-mix": "^6.0.6"
+    "laravel-mix": "^6.0.6",
+    "resolve-url-loader": "^3.1.2"
   },
   "version": "0.0.1"
 }

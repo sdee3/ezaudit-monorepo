@@ -31,14 +31,16 @@
   "name": "laravel/laravel",
   "prefer-stable": true,
   "require": {
+    "php": "^7.3|^8.0",
     "dzava/lighthouse": "^0.1.0",
     "fruitcake/laravel-cors": "^2.0",
     "guzzlehttp/guzzle": "^7.0.1",
     "laravel/framework": "^8.65",
     "laravel/sanctum": "^2.11",
+    "laravel/telescope": "^4.6",
     "laravel/tinker": "^2.5",
+    "laravel/ui": "^3.4",
     "nyholm/psr7": "^1.4",
-    "php": "^7.3|^8.0",
     "symfony/psr-http-message-bridge": "^2.1"
   },
   "require-dev": {

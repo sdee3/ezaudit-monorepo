@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuditController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:sanctum')->get('/login', function () {
+    if (Auth::user()) {
+        return redirect('/telescope');
+    }
+
+    return redirect('/login');
 });
 
 Route::post('/audit', AuditController::class);

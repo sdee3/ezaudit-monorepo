@@ -18,3 +18,4 @@ yarn-error.log
 /client/.next
 /client/out
 .DS_Store
+.pnpm-debug.log

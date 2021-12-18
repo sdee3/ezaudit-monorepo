@@ -1,23 +1,27 @@
-import { useCallback, useEffect, useState } from 'react'
-import { SubmitHandler, UseFormSetValue } from 'react-hook-form'
+import { useCallback, useState } from 'react'
+import {
+  SubmitHandler,
+  UseFormSetError,
+  UseFormSetValue,
+} from 'react-hook-form'
 
 import fetchFromApi from '../../../utils/api'
 import { useLoading } from '../../Loading'
-import { ApiResponse, Errors, InputValues } from '../models'
+import { ApiResponse, InputValues } from '../models'
 
 const useInput = (
   setFormFieldValue: UseFormSetValue<InputValues>,
-  errors: Errors
+  setError: UseFormSetError<InputValues>
 ) => {
   const [apiResponseOutput, setApiResponseOutput] = useState<string | null>(
     null
   )
   const { isLoading, setIsLoading } = useLoading()
 
-  useEffect(() => {
-    if (!apiResponseOutput || !errors?.domain) return
-    if (apiResponseOutput && errors.domain) setApiResponseOutput(null)
-  }, [errors?.domain, apiResponseOutput])
+  // useEffect(() => {
+  //   if (!apiResponseOutput || !errors?.domain) return
+  //   if (apiResponseOutput && errors.domain) setApiResponseOutput(null)
+  // }, [errors?.domain, apiResponseOutput])
 
   const onSubmit: SubmitHandler<InputValues> = useCallback(
     async ({ domain }) => {
@@ -33,10 +37,11 @@ const useInput = (
         setIsLoading(false)
       } finally {
         setIsLoading(false)
+        setError('domain', null)
         setFormFieldValue('domain', '')
       }
     },
-    [setFormFieldValue, setIsLoading]
+    [setError, setFormFieldValue, setIsLoading]
   )
 
   return { isLoading, onSubmit, apiResponseOutput }

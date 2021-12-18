@@ -21,15 +21,34 @@ const AuditForm = () => {
     handleSubmit,
     setValue,
     formState: { errors },
+    setError,
   } = useForm<InputValues>()
-  const { isLoading, onSubmit, apiResponseOutput } = useInput(setValue, errors)
+  const { isLoading, onSubmit, apiResponseOutput } = useInput(
+    setValue,
+    setError
+  )
   const { alertMessage, onAlertClose, setAlertMessage } = useAlert()
 
   useEffect(() => {
-    if (apiResponseOutput?.length === 0) return
-    setAlertMessage(apiResponseOutput)
+    if (apiResponseOutput === null || apiResponseOutput?.length === 0) return
+    setAlertMessage({ message: apiResponseOutput, state: 'error' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiResponseOutput])
+
+  useEffect(() => {
+    if (!errors?.domain || alertMessage.state === 'error') return
+
+    setError('domain', {
+      message: 'The domain is not valid! Please enter a valid URL.',
+    })
+
+    const { message } = errors.domain
+
+    setAlertMessage({ message, state: 'error' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors?.domain])
+
+  const { message, state } = alertMessage
 
   return (
     <Container>
@@ -60,12 +79,12 @@ const AuditForm = () => {
         </FormControl>
       </form>
 
-      {alertMessage?.length > 0 && (
+      {alertMessage.message.length > 0 && (
         <Alert
           marginTop={6}
-          alertMessage={alertMessage}
+          alertMessage={message}
           onCloseCallback={onAlertClose}
-          status="success"
+          status={state}
         />
       )}
     </Container>

@@ -11,3 +11,8 @@ export type Errors = {
 export type ApiResponse = {
   output: string
 }
+
+export interface AlertData {
+  message: string
+  state: 'success' | 'warning' | 'error' | null
+}

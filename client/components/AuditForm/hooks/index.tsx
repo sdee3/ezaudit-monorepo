@@ -1,9 +1,5 @@
-import { useCallback, useState } from 'react'
-import {
-  SubmitHandler,
-  UseFormSetError,
-  UseFormSetValue,
-} from 'react-hook-form'
+import { useCallback, useEffect, useState } from 'react'
+import { SubmitHandler, UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 
 import fetchFromApi from '../../../utils/api'
 import { useLoading } from '../../Loading'
@@ -11,17 +7,21 @@ import { ApiResponse, InputValues } from '../models'
 
 const useInput = (
   setFormFieldValue: UseFormSetValue<InputValues>,
-  setError: UseFormSetError<InputValues>
+  onAlertClose: () => void,
+  trigger: UseFormTrigger<InputValues>
 ) => {
-  const [apiResponseOutput, setApiResponseOutput] = useState<string | null>(
-    null
-  )
+  const [apiResponseOutput, setApiResponseOutput] =
+    useState<ApiResponse | null>(null)
   const { isLoading, setIsLoading } = useLoading()
 
-  // useEffect(() => {
-  //   if (!apiResponseOutput || !errors?.domain) return
-  //   if (apiResponseOutput && errors.domain) setApiResponseOutput(null)
-  // }, [errors?.domain, apiResponseOutput])
+  useEffect(() => {
+    trigger()
+  }, [trigger])
+
+  useEffect(() => {
+    if (apiResponseOutput !== null) setApiResponseOutput(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onAlertClose])
 
   const onSubmit: SubmitHandler<InputValues> = useCallback(
     async ({ domain }) => {
@@ -32,16 +32,17 @@ const useInput = (
           'POST',
           { domain }
         )
-        setApiResponseOutput(valueFromResponse.output)
+
+        setApiResponseOutput(valueFromResponse)
       } catch {
         setIsLoading(false)
       } finally {
         setIsLoading(false)
-        setError('domain', null)
         setFormFieldValue('domain', '')
+        trigger()
       }
     },
-    [setError, setFormFieldValue, setIsLoading]
+    [setFormFieldValue, setIsLoading, trigger]
   )
 
   return { isLoading, onSubmit, apiResponseOutput }

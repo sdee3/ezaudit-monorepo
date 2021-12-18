@@ -8,8 +8,13 @@ export type Errors = {
   domain?: FieldError
 }
 
+export type ServerResponse = {
+  message: string
+}
+
 export type ApiResponse = {
-  output: string
+  message: string
+  status: number
 }
 
 export interface AlertData {

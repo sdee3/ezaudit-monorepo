@@ -20,7 +20,8 @@
     "prod": "mix --production",
     "build": "concurrently \"cd client && pnpm build\"",
     "preinstall": "npx only-allow pnpm",
-    "test": "concurrently \"cd client && pnpm test\""
+    "cy:open": "concurrently \"cd client && pnpm cy:open\"",
+    "cy:run": "concurrently \"cd client && pnpm cy:run\""
   },
   "devDependencies": {
     "concurrently": "^6.4.0",

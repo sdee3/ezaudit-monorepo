@@ -39,9 +39,10 @@
   "proxy": "http://localhost:8000",
   "scripts": {
     "build": "next build && next export",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start",
-    "test": "cypress open"
+    "start": "next start"
   }
 }

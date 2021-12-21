@@ -1,4 +1,10 @@
-import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
+import Document, {
+  DocumentContext,
+  Head,
+  Html,
+  Main,
+  NextScript,
+} from 'next/document'
 import React, { ComponentProps } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 
@@ -15,11 +21,15 @@ export default class MyDocument extends Document {
         })
 
       const initialProps = await Document.getInitialProps(ctx)
+
       return {
         ...initialProps,
         styles: (
           <>
             {initialProps.styles}
+            <link rel="manifest" href="/manifest/manifest.json" />
+            <meta name="theme-color" content="#2663D1" />
+            <link rel="icon" type="image/x-icon" href="/favicon.ico" />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link
               rel="preconnect"

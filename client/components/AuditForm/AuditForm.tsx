@@ -3,7 +3,6 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Container,
   Flex,
 } from '@chakra-ui/react'
 import { useEffect } from 'react'
@@ -45,7 +44,7 @@ const AuditForm = () => {
   const { message, state } = alertMessage
 
   return (
-    <Container>
+    <>
       <form onSubmit={() => handleSubmit(onSubmit)}>
         <FormControl id="auditForm">
           <FormLabel>Your website to audit</FormLabel>
@@ -82,7 +81,7 @@ const AuditForm = () => {
           status={state}
         />
       )}
-    </Container>
+    </>
   )
 }
 

@@ -30,6 +30,8 @@ export default class MyDocument extends Document {
             <link rel="manifest" href="/manifest/manifest.json" />
             <meta name="theme-color" content="#2663D1" />
             <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+            <link rel="shortcut-icon" href="/manifest/icon-192x192.png" />
+            <link rel="apple-touch-icon" href="/manifest/icon-192x192.png" />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link
               rel="preconnect"

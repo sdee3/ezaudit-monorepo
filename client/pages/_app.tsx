@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { AppProps } from 'next/dist/shared/lib/router/router'
 import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'

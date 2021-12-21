@@ -27,6 +27,6 @@
   "name": "EZ Audit",
   "scope": "/",
   "short_name": "EZ Audit",
-  "start_url": "https://ezaudit.me",
+  "start_url": "/index.html",
   "theme_color": "#2663D1"
 }

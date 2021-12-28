@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Jobs\ProcessAudit;
+use App\Models\Audit;
 
 class AuditController extends Controller
 {
@@ -48,4 +50,36 @@ class AuditController extends Controller
 			], 500);
 		}
 	}
+
+	/**
+     * Gets all audits from database.
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function index()
+	{
+		$audits = Audit::all();
+		
+		return Response()->json([
+			'message' => $audits
+		], 200);
+	}
+
+	/**
+     * Store a new audit in the database.
+     *
+     * @return void
+     */
+    public function store($request)
+    {
+        // TODO: Validate the request...
+        $audit = new Audit;
+
+        $audit->domain = $request['domain'];
+        $audit->email = $request['email'];
+        $audit->date_of_request = $request['date_of_request'];
+        $audit->audit_result = $request['audit_result'];
+
+        $audit->save();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Http\Controllers\AuditController;
 use App\Mail\AuditCompleted;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,15 +17,17 @@ class ProcessAudit implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected string $domainToAudit;
+    protected string $email;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $domainToAudit, string $email = null)
+    public function __construct(string $domainToAudit, string $email = "stefd996@gmail.com")
     {
         $this->domainToAudit = $domainToAudit;
+        $this->email = $email;
     }
 
     /**
@@ -51,6 +54,8 @@ class ProcessAudit implements ShouldQueue
      */
     public function handle()
     {
+        $auditController = new AuditController();
+
         try {
             $dateOfAudit = date('Y-m-d_H:i:s');
             $outputPath = env('APP_PUBLIC_PATH') . '/storage/' . $dateOfAudit . '-' . $this->cleanDomain() . '-report.json';
@@ -66,7 +71,16 @@ class ProcessAudit implements ShouldQueue
                 ->seo()
                 ->audit($this->domainToAudit);
 
-            Mail::to("stefd996@gmail.com")->send($mailToSend);
+            $auditResult = file_get_contents($outputPath);
+
+            $auditController->store([
+                'domain' => $this->domainToAudit,
+                'date_of_request' => $dateOfAudit,
+                'email' => $this->email,
+                'audit_result' => $auditResult
+            ]);
+            
+            Mail::to($this->email)->send($mailToSend);
         } catch (\Dzava\Lighthouse\Exceptions\AuditFailedException $e) {
             report($e->getOutput());
         }

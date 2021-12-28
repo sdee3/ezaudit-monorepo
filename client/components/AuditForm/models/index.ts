@@ -13,7 +13,7 @@ export type ServerResponse = {
 }
 
 export type ApiResponse = {
-  message: string
+  message: string | object | object[]
   status: number
 }
 

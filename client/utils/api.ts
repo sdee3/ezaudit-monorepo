@@ -3,7 +3,7 @@ import { ApiResponse, ServerResponse } from '../components/AuditForm/models'
 const fetchFromApi = async (
   url: string,
   method: 'GET' | 'POST',
-  body: object
+  body?: object
 ): Promise<ApiResponse> => {
   try {
     const response = await fetch(`${process.env.API_URL}${url}`, {

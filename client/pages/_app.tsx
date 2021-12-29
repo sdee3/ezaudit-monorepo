@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { AppProps } from 'next/dist/shared/lib/router/router'
 import React, { useEffect } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 
 import theme from '../utils/theme'
+import { Layout } from '../components'
 
 const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
@@ -16,7 +16,9 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ChakraProvider>
   )
 }

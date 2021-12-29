@@ -71,15 +71,17 @@ class ProcessAudit implements ShouldQueue
                 ->seo()
                 ->audit($this->domainToAudit);
 
-            $auditResult = file_get_contents($outputPath);
+            $auditResultRaw = file_get_contents($outputPath);
+            $decodedResults = json_decode($auditResultRaw, true);
+            $auditResultJson = json_encode($decodedResults['categories']);
 
             $auditController->store([
                 'domain' => $this->domainToAudit,
                 'date_of_request' => $dateOfAudit,
                 'email' => $this->email,
-                'audit_result' => $auditResult
+                'audit_result' => $auditResultJson
             ]);
-            
+
             Mail::to($this->email)->send($mailToSend);
         } catch (\Dzava\Lighthouse\Exceptions\AuditFailedException $e) {
             report($e->getOutput());

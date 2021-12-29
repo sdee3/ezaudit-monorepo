@@ -5,7 +5,8 @@
     "jest": true
   },
   "rules": {
-    "@next/next/no-html-link-for-pages": ["error", "../client/pages/"],
+    "@next/next/no-html-link-for-pages": ["error", "./client/pages/"],
+    "jsx-a11y/anchor-is-valid": "off",
     "semi": ["error", "never"],
     "quotes": ["error", "single"],
     "react/prop-types": 0,
@@ -25,7 +26,10 @@
     "flowtype/require-valid-file-annotation": [0, "never"],
     "import/prefer-default-export": 0,
     "react/prefer-stateless-function": "error",
-    "react/jsx-filename-extension": ["error", { "extensions": [".ts", ".tsx"] }],
+    "react/jsx-filename-extension": [
+      "error",
+      { "extensions": [".ts", ".tsx"] }
+    ],
     "import/extensions": "off",
     "react/jsx-no-bind": [
       "error",

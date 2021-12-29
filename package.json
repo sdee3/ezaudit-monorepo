@@ -28,5 +28,8 @@
     "laravel-mix": "^6.0.6",
     "resolve-url-loader": "^3.1.2"
   },
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "dependencies": {
+    "postcss": "8"
+  }
 }

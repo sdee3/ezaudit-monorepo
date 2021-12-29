@@ -31,9 +31,9 @@ const AuditForm = () => {
   )
 
   useEffect(() => {
-    if (apiResponseOutput?.message?.length > 0) {
+    if ((apiResponseOutput?.message as string)?.length > 0) {
       setAlertMessage({
-        message: apiResponseOutput.message,
+        message: apiResponseOutput.message as string,
         state: apiResponseOutput.status === 202 ? 'success' : 'error',
       })
 

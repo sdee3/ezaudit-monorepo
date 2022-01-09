@@ -14,7 +14,7 @@ const fetchFromApi = async (
       },
       mode:
         process.env.API_URL === 'https://ezaudit.me' ? 'same-origin' : 'cors',
-      body: JSON.stringify(body),
+      body: body && JSON.stringify(body),
     })
 
     const responseJson: ServerResponse = await response.json()

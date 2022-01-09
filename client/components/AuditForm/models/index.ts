@@ -21,3 +21,7 @@ export interface AlertData {
   message: string
   state: 'success' | 'warning' | 'error' | null
 }
+
+export interface AuditResultFromAPI {
+  audit_result: any
+}

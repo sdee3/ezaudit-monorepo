@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Heading, Img, theme } from '@chakra-ui/react'
+import { Box, Container, Flex, Heading, Image, theme } from '@chakra-ui/react'
 import { BiUserCircle } from 'react-icons/bi'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -14,7 +14,7 @@ const Navbar = () => {
             <Link passHref href="/">
               <a>
                 <Flex alignItems="center" gap="4">
-                  <Img
+                  <Image
                     boxSize="50px"
                     fallbackSrc="https://via.placeholder.com/50"
                     src="/manifest/icon-192x192.png"

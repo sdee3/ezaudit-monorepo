@@ -5,7 +5,7 @@ import {
   Flex,
   Grid,
   Heading,
-  Img,
+  Image,
 } from '@chakra-ui/react'
 import Typewriter, { TypewriterClass } from 'typewriter-effect'
 
@@ -52,7 +52,8 @@ const App = () => {
             <AuditForm />
           </Flex>
           <Flex justifyContent="center">
-            <Img
+            <Image
+              alt="EZ Audit Hero Cover"
               maxW={{ sm: '80vw', md: 'container.sm' }}
               src="/img/EZAudit-Home-Futuristic.svg"
             />

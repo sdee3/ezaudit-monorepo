@@ -1,12 +1,5 @@
-import {
-  Box,
-  Center,
-  Container,
-  Flex,
-  Grid,
-  Heading,
-  Image,
-} from '@chakra-ui/react'
+import { Box, Center, Container, Flex, Grid, Heading } from '@chakra-ui/react'
+import Image from 'next/image'
 import Typewriter, { TypewriterClass } from 'typewriter-effect'
 
 import AuditForm from '../AuditForm'
@@ -52,11 +45,14 @@ const App = () => {
             <AuditForm />
           </Flex>
           <Flex justifyContent="center">
-            <Image
-              alt="EZ Audit Hero Cover"
-              maxW={{ sm: '80vw', md: 'container.sm' }}
-              src="/img/EZAudit-Home-Futuristic.svg"
-            />
+            <Box width={{ sm: '80vw', md: 'container.sm' }}>
+              <Image
+                alt="EZ Audit Hero Cover"
+                src="/img/EZAudit-Home-Futuristic.svg"
+                width="800"
+                height="600"
+              />
+            </Box>
           </Flex>
         </Grid>
       </Container>

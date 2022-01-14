@@ -30,7 +30,8 @@ After those steps, you will be able to do the following:
 
 * `pnpm build` to run the first build of the Next.js app 🥇
 * `pnpm dev` on the project root to run the Laravel Serve command, the [Laravel queue listener](https://laravel.com/docs/8.x/queues), and the Next.js app with hot reloading 👂🏼
-* `pnpm test` after starting the dev environment will open Cypress 🧪
+* `pnpm cy:open` after starting the dev environment will open Cypress 🧪
+  * Note that `pnpm cy:run` also exists, which will just run all tests in headless mode.
 
 ## License
 

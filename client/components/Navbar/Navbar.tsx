@@ -1,7 +1,8 @@
-import { Box, Container, Flex, Heading, Img, theme } from '@chakra-ui/react'
+import { Box, Container, Flex, Heading, theme } from '@chakra-ui/react'
 import { BiUserCircle } from 'react-icons/bi'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const Navbar = () => {
   const { push } = useRouter()
@@ -14,12 +15,14 @@ const Navbar = () => {
             <Link passHref href="/">
               <a>
                 <Flex alignItems="center" gap="4">
-                  <Img
-                    boxSize="50px"
-                    fallbackSrc="https://via.placeholder.com/50"
-                    src="/manifest/icon-192x192.png"
-                    alt="EZ Audit logo"
-                  />
+                  <Box boxSize="50px">
+                    <Image
+                      src="/manifest/icon-192x192.png"
+                      alt="EZ Audit logo"
+                      width="100%"
+                      height="100%"
+                    />
+                  </Box>
                   <Heading fontSize="2xl" textColor="gray.800">
                     EZ Audit
                   </Heading>

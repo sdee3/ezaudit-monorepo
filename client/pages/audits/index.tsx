@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { AuditResultFromAPI } from '../../components/AuditForm/models'
 import fetchFromApi from '../../utils/api'
 
 const AuditsIndex = () => {
@@ -8,7 +9,9 @@ const AuditsIndex = () => {
   const parseAudits = useCallback(async () => {
     const result = (await fetchFromApi('/api/audits', 'GET')).message
 
-    setAudits((result as object[]).map((r: any) => r.audit_result))
+    setAudits(
+      (result as object[]).map((r: AuditResultFromAPI) => r.audit_result)
+    )
   }, [])
 
   useEffect(() => {

@@ -17,7 +17,10 @@ const fetchFromApi = async (
       body: body && JSON.stringify(body),
     })
 
-    return (await response.json()) as ApiResponse
+    return {
+      message: (await response.json()).message,
+      status: response.status,
+    } as ApiResponse
   } catch (error) {
     return error
   }

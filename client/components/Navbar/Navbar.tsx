@@ -27,6 +27,7 @@ const Navbar = () => {
               </a>
             </Link>
             <BiUserCircle
+              data-cy='userDashboardBtn'
               cursor="pointer"
               color={theme.colors.gray[600]}
               onClick={() => push('/audits')}

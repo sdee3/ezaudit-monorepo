@@ -19,7 +19,7 @@ const Alert: FC<Props> = ({
   onCloseCallback,
   ...rest
 }) => (
-  <ChakraAlert data-cy='alert' status={rest.status} {...rest}>
+  <ChakraAlert status={rest.status} {...rest}>
     <AlertIcon />
     <AlertDescription mx={3}>{alertMessage}</AlertDescription>
     <CloseButton

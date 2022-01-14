@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { AlertData } from '../../AuditForm/models'
+import { AlertData } from '../../../models'
 
 const INITIAL_ALERT_VALUE: AlertData = { message: '', state: null }
 

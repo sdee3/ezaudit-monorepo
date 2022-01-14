@@ -8,20 +8,10 @@ export type Errors = {
   domain?: FieldError
 }
 
-export type ServerResponse = {
-  message: string
-}
-
 export type ApiResponse = {
   message: string | object | object[]
   status: number
 }
 
-export interface AlertData {
-  message: string
-  state: 'success' | 'warning' | 'error' | null
-}
-
-export interface AuditResultFromAPI {
-  audit_result: any
-}
+export * from './Alert'
+export * from './Audit'

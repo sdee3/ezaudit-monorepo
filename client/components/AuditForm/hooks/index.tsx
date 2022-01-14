@@ -3,7 +3,7 @@ import { SubmitHandler, UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 
 import fetchFromApi from '../../../utils/api'
 import { useLoading } from '../../Loading'
-import { ApiResponse, InputValues } from '../models'
+import { ApiResponse, InputValues } from '../../../models'
 
 const useInput = (
   setFormFieldValue: UseFormSetValue<InputValues>,

@@ -1,4 +1,4 @@
-import { ApiResponse, ServerResponse } from '../components/AuditForm/models'
+import { ApiResponse } from '../models'
 
 const fetchFromApi = async (
   url: string,
@@ -17,9 +17,7 @@ const fetchFromApi = async (
       body: body && JSON.stringify(body),
     })
 
-    const responseJson: ServerResponse = await response.json()
-
-    return { message: responseJson.message, status: response.status }
+    return (await response.json()) as ApiResponse
   } catch (error) {
     return error
   }

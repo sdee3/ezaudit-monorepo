@@ -18,8 +18,8 @@ class AuditController extends Controller
 	public function __invoke()
 	{
 		// TODO: Steps:
-		// 1. Queue an audit in the background
-		// 2. Send successful response immediately
+		// 1. Queue an audit in the background - DONE
+		// 2. Send successful response immediately - DONE
 		// 3. Cleanup
 		// 4. Profit
 
@@ -52,34 +52,48 @@ class AuditController extends Controller
 	}
 
 	/**
-     * Gets all audits from database.
-     *
-     * @return \Illuminate\Http\Response
-     */
+	 * Gets all audits from database.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
 	public function index()
 	{
 		$audits = Audit::all();
-		
+
 		return Response()->json([
 			'message' => $audits
 		], 200);
 	}
 
 	/**
-     * Store a new audit in the database.
-     *
-     * @return void
-     */
-    public function store($request)
-    {
-        // TODO: Validate the request...
-        $audit = new Audit;
+	 * Gets single audit from database matching given ID.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function single(Request $request)
+	{
+		$audit = Audit::where('id', $request['id'])->first();
 
-        $audit->domain = $request['domain'];
-        $audit->email = $request['email'];
-        $audit->date_of_request = $request['date_of_request'];
-        $audit->audit_result = $request['audit_result'];
+		return Response()->json([
+			'message' => $audit
+		], 200);
+	}
 
-        $audit->save();
-    }
+	/**
+	 * Store a new audit in the database.
+	 *
+	 * @return void
+	 */
+	public function store($request)
+	{
+		// TODO: Validate the request...
+		$audit = new Audit;
+
+		$audit->domain = $request['domain'];
+		$audit->email = $request['email'];
+		$audit->date_of_request = $request['date_of_request'];
+		$audit->audit_result = $request['audit_result'];
+
+		$audit->save();
+	}
 }

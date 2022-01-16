@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Http\Controllers\AuditController;
 use App\Mail\AuditCompleted;
+use App\Models\Audit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -54,12 +55,9 @@ class ProcessAudit implements ShouldQueue
      */
     public function handle()
     {
-        $auditController = new AuditController();
-
         try {
-            $dateOfAudit = date('Y-m-d_H:i:s');
+            $dateOfAudit = date('c');
             $outputPath = env('APP_PUBLIC_PATH') . '/storage/' . $dateOfAudit . '-' . $this->cleanDomain() . '-report.json';
-            $mailToSend = new AuditCompleted($dateOfAudit, $this->domainToAudit, $outputPath);
 
             (new Lighthouse())
                 ->setLighthousePath(env('APP_LIGHTHOUSE_PATH'))
@@ -75,12 +73,16 @@ class ProcessAudit implements ShouldQueue
             $decodedResults = json_decode($auditResultRaw, true);
             $auditResultJson = json_encode($decodedResults['categories']);
 
-            $auditController->store([
+            $audit = Audit::create([
                 'domain' => $this->domainToAudit,
                 'date_of_request' => $dateOfAudit,
                 'email' => $this->email,
                 'audit_result' => $auditResultJson
             ]);
+
+            // Send audit result email
+
+            $mailToSend = new AuditCompleted($audit);
 
             Mail::to($this->email)->send($mailToSend);
         } catch (\Dzava\Lighthouse\Exceptions\AuditFailedException $e) {

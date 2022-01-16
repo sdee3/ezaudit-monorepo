@@ -30,3 +30,4 @@ Route::middleware('auth:sanctum')->get('/login', function () {
 
 Route::post('/audit', AuditController::class);
 Route::get('/audits', [AuditController::class, 'index']);
+Route::get('/audits/{id}', [AuditController::class, 'single']);

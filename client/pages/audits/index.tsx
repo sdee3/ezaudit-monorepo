@@ -2,7 +2,6 @@ import {
   Box,
   Container,
   Heading,
-  Spinner,
   Table,
   Tbody,
   Td,
@@ -11,11 +10,13 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
+import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 
 import { AuditResultFromAPI, AuditResultParsed } from '../../models'
 import { AuditResult } from '../../models/Audit'
 import fetchFromApi from '../../utils/api'
+import { NoResults } from '../../components'
 
 const AuditsIndex = () => {
   const [audits, setAudits] = useState<AuditResultParsed[]>([])
@@ -37,7 +38,15 @@ const AuditsIndex = () => {
     parseAudits()
   }, [parseAudits])
 
-  if (!audits?.length) return <Spinner />
+  if (!audits || audits.length === 0)
+    return (
+      <Container maxW="container.xl">
+        <Heading textAlign="center" mb="8">
+          Your Audits
+        </Heading>
+        <NoResults />
+      </Container>
+    )
 
   return (
     <Container maxW="container.xl">
@@ -58,21 +67,25 @@ const AuditsIndex = () => {
           </Thead>
           <Tbody>
             {audits.map(audit => (
-              <Tr key={audit.id}>
-                <Td>
-                  <a
-                    href={audit.domain}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {audit.domain}
-                  </a>
-                </Td>
-                <Td>{audit.audit_result.accessibility.score * 100}</Td>
-                <Td>{audit.audit_result['best-practices'].score * 100}</Td>
-                <Td>{audit.audit_result.performance.score * 100}</Td>
-                <Td>{audit.audit_result.seo.score * 100}</Td>
-              </Tr>
+              <Link key={audit.id} href={`/audits/${audit.id}`}>
+                <a>
+                  <Tr>
+                    <Td>
+                      <a
+                        href={audit.domain}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {audit.domain}
+                      </a>
+                    </Td>
+                    <Td>{audit.audit_result.accessibility.score * 100}</Td>
+                    <Td>{audit.audit_result['best-practices'].score * 100}</Td>
+                    <Td>{audit.audit_result.performance.score * 100}</Td>
+                    <Td>{audit.audit_result.seo.score * 100}</Td>
+                  </Tr>
+                </a>
+              </Link>
             ))}
           </Tbody>
         </Table>

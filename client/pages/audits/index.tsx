@@ -67,24 +67,22 @@ const AuditsIndex = () => {
           </Thead>
           <Tbody>
             {audits.map(audit => (
-              <Link key={audit.id} href={`/audits/${audit.id}`}>
-                <a>
-                  <Tr>
-                    <Td>
-                      <a
-                        href={audit.domain}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        {audit.domain}
-                      </a>
-                    </Td>
-                    <Td>{audit.audit_result.accessibility.score * 100}</Td>
-                    <Td>{audit.audit_result['best-practices'].score * 100}</Td>
-                    <Td>{audit.audit_result.performance.score * 100}</Td>
-                    <Td>{audit.audit_result.seo.score * 100}</Td>
-                  </Tr>
-                </a>
+              <Link key={audit.id} href={`/audits/${audit.id}`} passHref>
+                <Tr cursor="pointer">
+                  <Td>
+                    <a
+                      href={audit.domain}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {audit.domain}
+                    </a>
+                  </Td>
+                  <Td>{audit.audit_result.accessibility.score * 100}</Td>
+                  <Td>{audit.audit_result['best-practices'].score * 100}</Td>
+                  <Td>{audit.audit_result.performance.score * 100}</Td>
+                  <Td>{audit.audit_result.seo.score * 100}</Td>
+                </Tr>
               </Link>
             ))}
           </Tbody>

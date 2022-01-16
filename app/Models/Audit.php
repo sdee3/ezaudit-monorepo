@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Audit extends Model
 {
     use HasFactory;
+    use \App\Traits\TraitUuid;
 
     /**
      * The attributes that are mass assignable.

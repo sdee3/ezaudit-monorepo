@@ -68,7 +68,7 @@ const AuditsIndex = () => {
           <Tbody>
             {audits.map(audit => (
               <Link key={audit.id} href={`/audits/${audit.id}`} passHref>
-                <Tr cursor="pointer">
+                <Tr data-cy={`auditTableRow${audit.id}`} cursor="pointer">
                   <Td>
                     <a
                       href={audit.domain}

@@ -15,3 +15,4 @@ export type ApiResponse = {
 
 export * from './Alert'
 export * from './Audit'
+export * from './BreadcrumbLink'

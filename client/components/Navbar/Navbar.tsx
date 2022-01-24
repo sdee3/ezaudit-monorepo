@@ -14,7 +14,7 @@ const Navbar = () => {
       <Container py="4" mb="10" shadow="md" maxW="100vw">
         <Box mx="2">
           <Flex alignItems="center" justifyContent="space-between">
-            <Link passHref href="/">
+            <Link passHref href={ROUTES.home}>
               <a>
                 <Flex alignItems="center" gap="4">
                   <Box boxSize="50px">

@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { AuditResultFromAPI, AuditResultParsed } from '../../../models'
 import { AuditResult } from '../../../models/Audit'
-import { fetchFromApi } from '../../../utils'
+import { fetchFromApi, ROUTES } from '../../../utils'
 import { NoResults } from '../../../components'
 
 const AuditsIndex = () => {
@@ -67,7 +67,7 @@ const AuditsIndex = () => {
           </Thead>
           <Tbody>
             {audits.map(audit => (
-              <Link key={audit.id} href={`/audits/${audit.id}`} passHref>
+              <Link key={audit.id} href={ROUTES.audit(audit.id)} passHref>
                 <Tr data-cy={`auditTableRow${audit.id}`} cursor="pointer">
                   <Td>
                     <a

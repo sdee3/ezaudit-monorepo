@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { SubmitHandler, UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 
-import fetchFromApi from '../../../utils/api'
+import { fetchFromApi } from '../../../utils'
 import { useLoading } from '../../Loading'
 import { ApiResponse, InputValues } from '../../../models'
 

@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Alert from '../Alert'
-import { WEBSITE_REGEX_PATTERN } from '../../utils/constants'
+import { WEBSITE_REGEX_PATTERN } from '../../utils'
 import useAlert from '../Alert/hooks'
 import { useInput } from './hooks'
 import { InputValues } from '../../models'

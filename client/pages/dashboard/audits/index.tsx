@@ -13,10 +13,10 @@ import {
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 
-import { AuditResultFromAPI, AuditResultParsed } from '../../models'
-import { AuditResult } from '../../models/Audit'
-import fetchFromApi from '../../utils/api'
-import { NoResults } from '../../components'
+import { AuditResultFromAPI, AuditResultParsed } from '../../../models'
+import { AuditResult } from '../../../models/Audit'
+import { fetchFromApi } from '../../../utils'
+import { NoResults } from '../../../components'
 
 const AuditsIndex = () => {
   const [audits, setAudits] = useState<AuditResultParsed[]>([])

@@ -1,6 +1,6 @@
 import { extendTheme } from '@chakra-ui/react'
 
-const theme = extendTheme({
+export const theme = extendTheme({
   colors: {
     primary: '#1976d2',
     primaryDark: '#004ba0',
@@ -17,5 +17,3 @@ const theme = extendTheme({
       'Open Sans, -apple-system, BlinkMacSystemFont, Segoe UI, Ubuntu, Cantarell, sans-serif',
   },
 })
-
-export default theme

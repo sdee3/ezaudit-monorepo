@@ -5,8 +5,8 @@ import {
   AuditResult,
   AuditResultFromAPI,
   AuditResultParsed,
-} from '../../models'
-import fetchFromApi from '../../utils/api'
+} from '../../../models'
+import { fetchFromApi } from '../../../utils'
 
 interface PageProps {
   audit: AuditResultParsed

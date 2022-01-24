@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
 
+import { ROUTES } from '../../utils'
+
 const Navbar = () => {
   const { push } = useRouter()
 
@@ -30,10 +32,10 @@ const Navbar = () => {
               </a>
             </Link>
             <BiUserCircle
-              data-cy='userDashboardBtn'
+              data-cy="userDashboardBtn"
               cursor="pointer"
               color={theme.colors.gray[600]}
-              onClick={() => push('/audits')}
+              onClick={() => push(ROUTES.dashboard)}
               size="3rem"
               title="User dashboard"
             />

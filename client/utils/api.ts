@@ -1,6 +1,6 @@
 import { ApiResponse } from '../models'
 
-const fetchFromApi = async (
+export const fetchFromApi = async (
   url: string,
   method: 'GET' | 'POST',
   body?: object
@@ -25,5 +25,3 @@ const fetchFromApi = async (
     return error
   }
 }
-
-export default fetchFromApi

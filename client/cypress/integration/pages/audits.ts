@@ -1,9 +1,10 @@
 let audits = null
 
-beforeEach('load dashboard with audits', () => {
-  cy.visit('/dashboard/audits')
-
+before('load audits from JSON', () => {
   cy.fixture('audits.json').then(data => (audits = data.message))
+})
+
+beforeEach(() => {
   cy.intercept('/api/audits', req => {
     req.reply({
       message: audits,
@@ -11,9 +12,21 @@ beforeEach('load dashboard with audits', () => {
   })
 
   cy.task('clearNock')
+
+  cy.visit('/dashboard/audits')
 })
 
 it('renders a table with audits', () => {
+  cy.task('nock', {
+    hostname: 'http://localhost:8000',
+    method: 'GET',
+    path: '/api/audits',
+    statusCode: 200,
+    body: {
+      message: audits,
+    },
+  })
+
   cy.dataCy('auditsTable').should('be.visible')
 })
 

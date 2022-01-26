@@ -15,9 +15,19 @@ it('sees an enabled submit button if the domain input value is valid', () => {
   cy.dataCy('submitAuditBtn').should('not.be.disabled')
 })
 
-it('sends an audit request' , () => {
+it('sends an audit request', () => {
   cy.dataCy('submitAuditInput').clear()
   cy.dataCy('submitAuditInput').type('google.com')
+
+  cy.intercept('/api/audit', req => {
+    req.reply({
+      statusCode: 202,
+      body: {
+        message:
+          'Audit scheduled successfully! You will receive an email once the audit is ready.',
+      },
+    })
+  })
 
   cy.dataCy('submitAuditBtn').click()
   cy.dataCy('alert').should('be.visible')

@@ -17,6 +17,13 @@ it('clicks on user button and navigates to user dashboard', () => {
 it('navigates further to list of audits', () => {
   cy.visit('/dashboard')
   cy.dataCy('viewAuditsBtn').should('be.visible')
+
+  cy.intercept('/api/audits', req => {
+    req.reply({
+      message: [],
+    })
+  })
+
   cy.dataCy('viewAuditsBtn').click()
   cy.location('pathname').should('equal', '/dashboard/audits')
 })

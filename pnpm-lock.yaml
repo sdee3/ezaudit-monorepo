@@ -24,6 +24,7 @@ importers:
       '@chakra-ui/react': ^1.7.3
       '@emotion/react': ^11
       '@emotion/styled': ^11
+      '@types/node': ^17.0.12
       '@types/react': ^17.0.36
       '@types/react-dom': ^17.0.11
       '@types/styled-components': ^5.1.15
@@ -43,6 +44,7 @@ importers:
       framer-motion: ^4
       next: ^12.0.4
       next-http-proxy-middleware: ^1.1.2
+      nock: ^13.2.2
       prettier: ^2.5.0
       react: ^17.0.2
       react-dom: ^17.0.2
@@ -72,6 +74,7 @@ importers:
       '@babel/eslint-parser': 7.16.5_@babel+core@7.16.5+eslint@8.5.0
       '@babel/plugin-syntax-flow': 7.16.5_@babel+core@7.16.5
       '@babel/plugin-transform-react-jsx': 7.16.5_@babel+core@7.16.5
+      '@types/node': 17.0.12
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       '@types/styled-components': 5.1.18
@@ -88,6 +91,7 @@ importers:
       eslint-plugin-jsx-a11y: 6.5.1_eslint@8.5.0
       eslint-plugin-react: 7.27.1_eslint@8.5.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.5.0
+      nock: 13.2.2
       prettier: 2.5.1
       react-is: 17.0.2
       typescript: 4.5.4
@@ -2744,7 +2748,7 @@ packages:
   /@types/http-proxy/1.17.3:
     resolution: {integrity: sha512-wIPqXANye5BbORbuh74exbwNzj+UWCwWyeEFJzUQ7Fq3W2NSAy+7x7nX1fgbEypr2/TdKqpeuxLnXWgzN533/Q==}
     dependencies:
-      '@types/node': 16.11.12
+      '@types/node': 17.0.12
     dev: false
 
   /@types/http-proxy/1.17.7:
@@ -2812,6 +2816,10 @@ packages:
 
   /@types/node/16.11.12:
     resolution: {integrity: sha512-+2Iggwg7PxoO5Kyhvsq9VarmPbIelXP070HMImEpbtGCoyWNINQj4wzjbQCXzdHTRXnqufutJb5KAURZANNBAw==}
+    dev: true
+
+  /@types/node/17.0.12:
+    resolution: {integrity: sha512-4YpbAsnJXWYK/fpTVFlMIcUIho2AYCi4wg5aNPrG1ng7fn/1/RZfCIpRCiBX+12RVa34RluilnvCqD+g3KiSiA==}
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
@@ -2870,7 +2878,7 @@ packages:
     resolution: {integrity: sha512-8uALY5LTvSuHgloDVUvWP3pIauILm+8/0pDMokuDYIoNsOkSwd5AiHBTSEJjKTDcZr5z8UpgOWZkxBF4iJftoA==}
     requiresBuild: true
     dependencies:
-      '@types/node': 16.11.12
+      '@types/node': 17.0.12
     dev: true
     optional: true
 
@@ -6546,7 +6554,7 @@ packages:
     resolution: {integrity: sha512-mk0umAQ5lT+CaOJ+Qp01N6kz48sJG2kr2n1rX0koqKf6FIygQV0qLOdN9SCYID4IVeSigDOcPeGLozdMLYfb5g==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
-      '@types/node': 16.11.12
+      '@types/node': 17.0.12
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: false
@@ -6854,6 +6862,10 @@ packages:
 
   /lodash.once/4.1.1:
     resolution: {integrity: sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=}
+    dev: true
+
+  /lodash.set/4.3.2:
+    resolution: {integrity: sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=}
     dev: true
 
   /lodash.sortby/4.7.0:
@@ -7191,6 +7203,18 @@ packages:
     dependencies:
       lower-case: 2.0.2
       tslib: 2.3.1
+    dev: true
+
+  /nock/13.2.2:
+    resolution: {integrity: sha512-PcBHuvl9i6zfaJ50A7LS55oU+nFLv8htXIhffJO+FxyfibdZ4jEvd9kTuvkrJireBFIGMZ+oUIRpMK5gU9h//g==}
+    engines: {node: '>= 10.13'}
+    dependencies:
+      debug: 4.3.3
+      json-stringify-safe: 5.0.1
+      lodash.set: 4.3.2
+      propagate: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /node-abi/3.5.0:
@@ -8108,6 +8132,11 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+
+  /propagate/2.0.1:
+    resolution: {integrity: sha512-vGrhOavPSTz4QVNuBNdcNXePNdNMaO1xj9yBeH1ScQPjk/rhg9sSlCXPhMkFuaNNW/syTvYqsnbIJxMBfRbbag==}
+    engines: {node: '>= 8'}
+    dev: true
 
   /proxy-addr/2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}

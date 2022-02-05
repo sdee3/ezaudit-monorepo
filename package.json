@@ -24,12 +24,12 @@
     "cy:run": "concurrently \"cd client && pnpm cy:run\""
   },
   "devDependencies": {
-    "concurrently": "^6.4.0",
-    "laravel-mix": "^6.0.39",
+    "concurrently": "^7.0.0",
+    "laravel-mix": "^6.0.41",
     "resolve-url-loader": "^3.1.4"
   },
   "version": "0.0.1",
   "dependencies": {
-    "postcss": "^8.4.5"
+    "postcss": "^8.4.6"
   }
 }

@@ -24,13 +24,13 @@ const useInput = (
   }, [onAlertClose])
 
   const onSubmit: SubmitHandler<InputValues> = useCallback(
-    async ({ domain }) => {
+    async ({ domain, email }) => {
       try {
         setIsLoading(true)
         const valueFromResponse: ApiResponse = await fetchFromApi(
           '/api/audit',
           'POST',
-          { domain }
+          { domain, email }
         )
 
         setApiResponseOutput(valueFromResponse)
@@ -39,6 +39,7 @@ const useInput = (
       } finally {
         setIsLoading(false)
         setFormFieldValue('domain', '')
+        setFormFieldValue('email', '')
         trigger()
       }
     },

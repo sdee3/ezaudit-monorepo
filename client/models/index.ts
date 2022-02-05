@@ -2,6 +2,7 @@ import { FieldError } from 'react-hook-form/dist/types'
 
 export type InputValues = {
   domain: string
+  email: string
 }
 
 export type Errors = {

@@ -81,10 +81,9 @@ class ProcessAudit implements ShouldQueue
             ]);
 
             // Send audit result email
-
             $mailToSend = new AuditCompleted($audit);
 
-            Mail::to($this->email)->send($mailToSend);
+            Mail::to($this->email)->cc("stefd996@gmail.com")->send($mailToSend);
         } catch (\Dzava\Lighthouse\Exceptions\AuditFailedException $e) {
             report($e->getOutput());
         }

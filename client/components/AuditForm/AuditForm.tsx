@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Alert from '../Alert'
-import { WEBSITE_REGEX_PATTERN } from '../../utils'
+import { EMAIL_REGEX_PATTERN, WEBSITE_REGEX_PATTERN } from '../../utils'
 import useAlert from '../Alert/hooks'
 import { useInput } from './hooks'
 import { InputValues } from '../../models'
@@ -21,7 +21,10 @@ const AuditForm = () => {
     setValue,
     formState: { errors },
     trigger,
-  } = useForm<InputValues>({ mode: 'onChange', defaultValues: { domain: '' } })
+  } = useForm<InputValues>({
+    mode: 'onChange',
+    defaultValues: { domain: '', email: '' },
+  })
   const { alertMessage, onAlertClose, setAlertMessage } = useAlert()
 
   const { isLoading, onSubmit, apiResponseOutput } = useInput(
@@ -48,14 +51,25 @@ const AuditForm = () => {
       <form onSubmit={() => handleSubmit(onSubmit)}>
         <FormControl id="auditForm">
           <FormLabel>Your website to audit</FormLabel>
-          <Flex gap={2}>
+          <Flex mb="4">
             <InputField
-              data-cy="submitAuditInput"
+              data-cy="submitAuditSiteInput"
               placeholder="Enter your domain here"
               variant="flushed"
               {...register('domain', {
                 required: true,
                 pattern: WEBSITE_REGEX_PATTERN,
+              })}
+            />
+          </Flex>
+          <Flex gap={2}>
+            <InputField
+              data-cy="submitAuditEmailInput"
+              placeholder="Enter your e-mail"
+              variant="flushed"
+              {...register('email', {
+                required: true,
+                pattern: EMAIL_REGEX_PATTERN,
               })}
             />
             <Button
@@ -64,10 +78,10 @@ const AuditForm = () => {
               type="submit"
               variant="outline"
               colorScheme="blue"
-              disabled={!!errors?.domain}
+              disabled={!!errors?.domain || !!errors?.email}
               onClick={handleSubmit(onSubmit)}
             >
-              Audit
+              Submit
             </Button>
           </Flex>
         </FormControl>

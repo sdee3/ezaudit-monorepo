@@ -13,7 +13,7 @@ class AuditControllerTest extends TestCase
      */
     public function test_audit_invalid()
     {
-        $response = $this->postJson('/api/audit', ['domain' => 'google']);
+        $response = $this->postJson('/api/audit', ['domain' => 'google', 'email' => '']);
         $response->assertStatus(400);
     }
 
@@ -24,7 +24,7 @@ class AuditControllerTest extends TestCase
      */
     public function test_audit_valid()
     {
-        $response = $this->postJson('/api/audit', ['domain' => 'www.google.com']);
+        $response = $this->postJson('/api/audit', ['domain' => 'www.google.com', 'email' => 'test@test.com']);
         $response->assertStatus(202);
     }
 }

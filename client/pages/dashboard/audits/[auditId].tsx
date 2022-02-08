@@ -28,21 +28,31 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const resultFromAPI = (
-    await fetchFromApi(`/api/audits/${context.query.auditId}`, 'GET')
-  ).message
+  try {
+    const resultFromAPI = (
+      await fetchFromApi(`/api/audits/${context.query.auditId}`, 'GET')
+    ).message
 
-  const auditParsed: AuditResultParsed = {
-    ...(resultFromAPI as AuditResultFromAPI),
-    audit_result: JSON.parse(
-      (resultFromAPI as AuditResultFromAPI).audit_result
-    ) as AuditResult,
-  }
+    const auditParsed: AuditResultParsed = {
+      ...(resultFromAPI as AuditResultFromAPI),
+      audit_result: JSON.parse(
+        (resultFromAPI as AuditResultFromAPI).audit_result
+      ) as AuditResult,
+    }
 
-  return {
-    props: {
-      audit: auditParsed,
-    },
+    return {
+      props: {
+        audit: auditParsed,
+      },
+    }
+  } catch (error) {
+    console.error(error)
+
+    return {
+      props: {
+        audit: null,
+      },
+    }
   }
 }
 

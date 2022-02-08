@@ -28,6 +28,9 @@ Route::middleware('auth:sanctum')->get('/login', function () {
     return redirect('/login');
 });
 
-Route::post('/audit', AuditController::class);
-Route::get('/audits', [AuditController::class, 'index']);
-Route::get('/audits/{id}', [AuditController::class, 'single']);
+Route::middleware('auth')->group(function () {
+    Route::post('/audit', AuditController::class)->withoutMiddleware('auth');
+
+    Route::get('/audits', [AuditController::class, 'index']);
+    Route::get('/audits/{id}', [AuditController::class, 'single']);
+});

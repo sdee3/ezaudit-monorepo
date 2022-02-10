@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Jobs\ProcessAudit;
 use App\Models\Audit;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 
 class AuditController extends Controller
 {

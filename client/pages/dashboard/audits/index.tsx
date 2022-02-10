@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Container,
@@ -12,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
+import { useCookies } from 'react-cookie'
 
 import {
   AuditResultFromAPI,
@@ -20,12 +22,12 @@ import {
 } from '../../../models'
 import { AuditResult } from '../../../models/Audit'
 import {
-  fetchFromApi,
   ROUTES,
   SUCCESS_STATUS_CODE,
   UNAUTHORIZED_STATUS_CODE,
 } from '../../../utils'
 import { Breadcrumbs, NoResults, SignIn } from '../../../components'
+import { useApi } from '../../../utils'
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
   {
@@ -35,11 +37,14 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 ]
 
 const AuditsIndex = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setCookie, removeCookie] = useCookies()
   const [audits, setAudits] = useState<AuditResultParsed[]>([])
   const [isUnauthorized, setIsUnauthorized] = useState(false)
+  const { fetchFromApi } = useApi()
 
   const parseAudits = useCallback(async () => {
-    const { status, message } = await fetchFromApi('/api/audits', 'GET')
+    const { status, message } = await fetchFromApi('/api/audits', 'GET', null)
 
     if (status === UNAUTHORIZED_STATUS_CODE) {
       setIsUnauthorized(true)
@@ -59,16 +64,26 @@ const AuditsIndex = () => {
   const login = useCallback(async () => {
     const res = await fetchFromApi('/api/auth/login', 'POST', {
       email: 'stefd996@gmail.com',
-      password: '',
+      password: 'password',
     })
 
     if (res.status === SUCCESS_STATUS_CODE) setIsUnauthorized(false)
+    setCookie('accessToken', res.access_token)
+  }, [])
+
+  const logout = useCallback(async () => {
+    const res = await fetchFromApi('/api/auth/logout', 'POST')
+
+    if (res.status === SUCCESS_STATUS_CODE) setIsUnauthorized(false)
+    removeCookie('accessToken')
   }, [])
 
   useEffect(() => {
-    parseAudits()
     login()
-  }, [parseAudits, login])
+    parseAudits()
+
+    // logout()
+  }, [parseAudits, login, logout])
 
   if (isUnauthorized) {
     return (

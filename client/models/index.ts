@@ -9,7 +9,7 @@ export type Errors = {
   domain?: FieldError
 }
 
-export type ApiResponse = {
+export interface ApiResponse extends Record<string, unknown> {
   message: string | object | object[]
   status: number
 }

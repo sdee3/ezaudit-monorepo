@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use JWTAuth;
 use App\Models\User;
 use Validator;
 
@@ -25,14 +25,15 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make(['email' => $request->email, 'password' => $request->password ?? ''], [
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'string',
         ]);
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        if (!$token = auth()->attempt($validator->validated())) {
+        if (!$token = JWTAuth::attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $this->createNewToken($token);
@@ -45,17 +46,19 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
+
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
+
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)]
         ));
+
         return response()->json([
             'message' => 'User successfully registered',
             'user' => $user
@@ -79,7 +82,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->createNewToken(auth()->refresh());
+        return $this->createNewToken(JWTAuth::refresh());
     }
     /**
      * Get the authenticated User.
@@ -88,7 +91,7 @@ class AuthController extends Controller
      */
     public function userProfile()
     {
-        return response()->json(auth()->user());
+        return response()->json(JWTAuth::user());
     }
     /**
      * Get the token array structure.
@@ -102,8 +105,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'user' => JWTAuth::user()
         ]);
     }
 }

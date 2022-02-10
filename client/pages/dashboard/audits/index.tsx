@@ -19,8 +19,13 @@ import {
   BreadcrumbLink,
 } from '../../../models'
 import { AuditResult } from '../../../models/Audit'
-import { fetchFromApi, ROUTES } from '../../../utils'
-import { Breadcrumbs, NoResults } from '../../../components'
+import {
+  fetchFromApi,
+  ROUTES,
+  SUCCESS_STATUS_CODE,
+  UNAUTHORIZED_STATUS_CODE,
+} from '../../../utils'
+import { Breadcrumbs, NoResults, SignIn } from '../../../components'
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
   {
@@ -31,12 +36,18 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 
 const AuditsIndex = () => {
   const [audits, setAudits] = useState<AuditResultParsed[]>([])
+  const [isUnauthorized, setIsUnauthorized] = useState(false)
 
   const parseAudits = useCallback(async () => {
-    const resultFromAPI = (await fetchFromApi('/api/audits', 'GET')).message
+    const { status, message } = await fetchFromApi('/api/audits', 'GET')
+
+    if (status === UNAUTHORIZED_STATUS_CODE) {
+      setIsUnauthorized(true)
+      return
+    }
 
     const auditsParsed: AuditResultParsed[] = (
-      resultFromAPI as AuditResultFromAPI[]
+      message as AuditResultFromAPI[]
     ).map(r => ({
       ...r,
       audit_result: JSON.parse(r.audit_result) as AuditResult,
@@ -45,11 +56,29 @@ const AuditsIndex = () => {
     setAudits(auditsParsed)
   }, [])
 
+  const login = useCallback(async () => {
+    const res = await fetchFromApi('/api/auth/login', 'POST', {
+      email: 'stefd996@gmail.com',
+      password: '',
+    })
+
+    if (res.status === SUCCESS_STATUS_CODE) setIsUnauthorized(false)
+  }, [])
+
   useEffect(() => {
     parseAudits()
-  }, [parseAudits])
+    login()
+  }, [parseAudits, login])
 
-  if (!audits || audits.length === 0)
+  if (isUnauthorized) {
+    return (
+      <Container maxW="container.xl">
+        <SignIn />
+      </Container>
+    )
+  }
+
+  if (!audits || audits.length === 0) {
     return (
       <Container maxW="container.xl">
         <Heading textAlign="center" mb="8">
@@ -58,6 +87,7 @@ const AuditsIndex = () => {
         <NoResults />
       </Container>
     )
+  }
 
   return (
     <>

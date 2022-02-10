@@ -11,7 +11,8 @@ import {
 import { fetchFromApi, ROUTES } from '../../../utils'
 
 interface PageProps {
-  audit: AuditResultParsed
+  audit: AuditResultParsed | null
+  isUnauthorized: boolean
 }
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
@@ -46,17 +47,19 @@ export const getServerSideProps: GetServerSideProps = async (
       },
     }
   } catch (error) {
-    console.error(error)
-
     return {
       props: {
         audit: null,
+        isUnauthorized: true,
       },
     }
   }
 }
 
-const AuditByIdOverview = ({ audit }: PageProps) => {
+const AuditByIdOverview = ({ audit, isUnauthorized }: PageProps) => {
+  if (!audit && isUnauthorized)
+    return <p>You have to be authenticated to view this page.</p>
+
   return (
     <>
       <Breadcrumbs links={BREADCRUMB_LINKS} />

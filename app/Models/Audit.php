@@ -5,6 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Audit
+ *
+ * @property string $id
+ * @property string $domain
+ * @property string $email
+ * @property string $date_of_request
+ * @property string $audit_result
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereAuditResult($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereDateOfRequest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereDomain($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Audit extends Model
 {
     use HasFactory;

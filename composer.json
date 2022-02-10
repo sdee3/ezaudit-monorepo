@@ -19,7 +19,9 @@
   "description": "The Laravel Framework.",
   "extra": {
     "laravel": {
-      "dont-discover": []
+      "dont-discover": [
+        "barryvdh/laravel-ide-helper"
+      ]
     }
   },
   "keywords": [
@@ -41,9 +43,11 @@
     "laravel/tinker": "^2.5",
     "laravel/ui": "^3.4",
     "nyholm/psr7": "^1.4",
+    "php-open-source-saver/jwt-auth": "^1.4",
     "symfony/psr-http-message-bridge": "^2.1"
   },
   "require-dev": {
+    "barryvdh/laravel-ide-helper": "^2.12",
     "facade/ignition": "^2.5",
     "fakerphp/faker": "^1.9.1",
     "laravel/sail": "^1.0.1",
@@ -62,13 +66,17 @@
     "post-install-cmd": [
       "@php artisan key:generate",
       "@php artisan storage:link",
-      "@php artisan migrate"
+      "@php artisan migrate",
+      "@php artisan ide-helper:generate"
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
     "post-update-cmd": [
-      "@php artisan vendor:publish --tag=laravel-assets --ansi"
+      "@php artisan vendor:publish --tag=laravel-assets --ansi",
+      "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+      "@php artisan ide-helper:generate",
+      "@php artisan ide-helper:meta"
     ]
   },
   "type": "project"

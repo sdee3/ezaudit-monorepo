@@ -9,13 +9,7 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react'
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useCookies } from 'react-cookie'
 
@@ -29,28 +23,43 @@ import {
 import useAlert from '../Alert/hooks'
 
 interface Props {
-  setIsUnauthorized: Dispatch<SetStateAction<boolean>>
+  isNewlyRegistered: boolean
 }
 
-const SignInForm = ({ setIsUnauthorized }: Props) => {
+export const SignInForm = ({ isNewlyRegistered }: Props) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { isValid, errors },
   } = useForm<SignInInputValues>({
     mode: 'onChange',
     defaultValues: { email: '', password: '' },
   })
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setCookie, removeCookie] = useCookies()
+  const [_, setCookie, _removeCookie] = useCookies()
   const { fetchFromApi } = useApi()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
+
+  const isSubmitDisabled = useMemo(
+    () => !!errors?.email || !!errors?.password || !isValid,
+    [errors?.email, errors?.password, isValid]
+  )
+
+  useEffect(() => {
+    if (!isNewlyRegistered) return
+
+    setAlertMessage({
+      message: 'You have successfully registered. Proceed to sign in.',
+      state: 'success',
+    })
+  }, [isNewlyRegistered, setAlertMessage])
 
   const onSubmit: SubmitHandler<SignInInputValues> = useCallback(
     async ({ email, password }) => {
       try {
         setIsLoading(true)
+        alertMessage.message.length && onAlertClose()
 
         const response = await fetchFromApi('/api/auth/login', 'POST', {
           email,
@@ -66,27 +75,38 @@ const SignInForm = ({ setIsUnauthorized }: Props) => {
           return
         }
 
-        setIsUnauthorized(false)
         setCookie('accessToken', response.access_token)
+        setCookie('user', JSON.stringify(response.user))
       } catch (error) {
         setIsLoading(false)
       } finally {
         setIsLoading(false)
       }
     },
-    [fetchFromApi, setAlertMessage, setCookie, setIsUnauthorized]
+    [
+      alertMessage.message.length,
+      fetchFromApi,
+      onAlertClose,
+      setAlertMessage,
+      setCookie,
+    ]
   )
-
-  useEffect(() => {
-    removeCookie('accessToken')
-  }, [removeCookie])
 
   const { message, state } = alertMessage
 
   return (
-    <Flex align="center" justify="center">
+    <Flex align="center" justify="center" flexDirection="column">
+      {message?.length > 0 && (
+        <Alert
+          alertMessage={message}
+          onCloseCallback={onAlertClose}
+          status={state}
+          mx="auto"
+          maxW="lg"
+        />
+      )}
       <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
-        <Stack align="center">
+        <Stack align="center" mb={6}>
           <Heading fontSize="4xl">Sign in to your account</Heading>
         </Stack>
         <Box
@@ -106,7 +126,7 @@ const SignInForm = ({ setIsUnauthorized }: Props) => {
                     required: true,
                     pattern: EMAIL_REGEX_PATTERN,
                   })}
-                  errorBorderColor="red.500"
+                  isInvalid={!!errors?.email}
                 />
               </FormControl>
               <FormControl id="password">
@@ -117,6 +137,7 @@ const SignInForm = ({ setIsUnauthorized }: Props) => {
                   {...register('password', {
                     required: true,
                   })}
+                  isInvalid={!!errors?.password}
                 />
               </FormControl>
               <Stack spacing={10}>
@@ -126,7 +147,7 @@ const SignInForm = ({ setIsUnauthorized }: Props) => {
                   _hover={{
                     bg: 'blue.500',
                   }}
-                  disabled={!!errors?.email || !!errors?.password}
+                  disabled={isSubmitDisabled}
                   isLoading={isLoading}
                   onClick={handleSubmit(onSubmit)}
                 >
@@ -135,18 +156,8 @@ const SignInForm = ({ setIsUnauthorized }: Props) => {
               </Stack>
             </Stack>
           </form>
-          {message?.length > 0 && (
-            <Alert
-              marginTop={6}
-              alertMessage={message}
-              onCloseCallback={onAlertClose}
-              status={state}
-            />
-          )}
         </Box>
       </Stack>
     </Flex>
   )
 }
-
-export default SignInForm

@@ -1,4 +1,4 @@
-import SignInForm from './SignInForm'
-import RegisterForm from './RegisterForm'
+import { AuthWrapper } from './AuthWrapper'
 
-export { SignInForm, RegisterForm }
+export { AuthWrapper }
+export * from './hooks'

@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useCookies } from 'react-cookie'
 
 import { ApiResponse } from '../../models'
+import { ERROR_CODES } from '../constants'
 
 const useApi = () => {
   const [cookies] = useCookies()
@@ -29,11 +30,7 @@ const useApi = () => {
 
         const parsedBody = await response.json()
 
-        if (
-          [400, 401, 402, 403, 404, 405, 408, 500, 502].includes(
-            response.status
-          )
-        ) {
+        if (ERROR_CODES.includes(response.status)) {
           throw new Error(response.status.toString())
         }
 

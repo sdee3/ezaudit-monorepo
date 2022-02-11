@@ -30,6 +30,10 @@
       "error",
       { "extensions": [".ts", ".tsx"] }
     ],
+    "react/jsx-curly-brace-presence": [
+      "error",
+      { "props": "never", "children": "never" }
+    ],
     "import/extensions": "off",
     "react/jsx-no-bind": [
       "error",

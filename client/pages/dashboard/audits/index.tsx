@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
+import { useCookies } from 'react-cookie'
 
 import {
   AuditResultFromAPI,
@@ -19,8 +20,15 @@ import {
   BreadcrumbLink,
 } from '../../../models'
 import { AuditResult } from '../../../models/Audit'
-import { fetchFromApi, ROUTES } from '../../../utils'
-import { Breadcrumbs, NoResults } from '../../../components'
+import { ROUTES, UNAUTHORIZED_STATUS_CODE } from '../../../utils'
+import {
+  Breadcrumbs,
+  Loading,
+  NoResults,
+  AuthWrapper,
+  useUser,
+} from '../../../components'
+import { useApi } from '../../../utils'
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
   {
@@ -30,26 +38,46 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 ]
 
 const AuditsIndex = () => {
-  const [audits, setAudits] = useState<AuditResultParsed[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, _setCookie, _removeCookie] = useCookies()
+  const [audits, setAudits] = useState<AuditResultParsed[] | null>(null)
+  const { fetchFromApi } = useApi()
+  const { user } = useUser()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const parseAudits = useCallback(async () => {
-    const resultFromAPI = (await fetchFromApi('/api/audits', 'GET')).message
+    try {
+      setIsLoading(true)
+      const { status, message } = await fetchFromApi('/api/audits', 'GET', null)
 
-    const auditsParsed: AuditResultParsed[] = (
-      resultFromAPI as AuditResultFromAPI[]
-    ).map(r => ({
-      ...r,
-      audit_result: JSON.parse(r.audit_result) as AuditResult,
-    }))
+      if (status === UNAUTHORIZED_STATUS_CODE) return
 
-    setAudits(auditsParsed)
-  }, [])
+      const auditsParsed: AuditResultParsed[] = (
+        message as AuditResultFromAPI[]
+      ).map(r => ({
+        ...r,
+        audit_result: JSON.parse(r.audit_result) as AuditResult,
+      }))
+
+      setAudits(auditsParsed)
+    } catch (err) {
+      if (audits?.length !== 0) setAudits([])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [audits, fetchFromApi])
 
   useEffect(() => {
-    parseAudits()
-  }, [parseAudits])
+    if (audits !== null) return
+    user !== null && parseAudits()
+  }, [audits, parseAudits, user])
 
-  if (!audits || audits.length === 0)
+  if (isLoading) return <Loading />
+
+  if (!user) return <AuthWrapper />
+
+  if (!audits || audits.length === 0) {
     return (
       <Container maxW="container.xl">
         <Heading textAlign="center" mb="8">
@@ -58,6 +86,7 @@ const AuditsIndex = () => {
         <NoResults />
       </Container>
     )
+  }
 
   return (
     <>

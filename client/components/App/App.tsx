@@ -39,7 +39,7 @@ const App = () => {
                   options={{ loop: true }}
                 />
               </Box>
-              {'audit tool for your business.'}
+              audit tool for your business.
             </Heading>
 
             <AuditForm />

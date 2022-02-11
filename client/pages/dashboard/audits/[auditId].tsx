@@ -1,18 +1,16 @@
 import { Container, Heading, Text } from '@chakra-ui/react'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import { useRouter } from 'next/router'
+import { useCallback, useEffect, useState } from 'react'
 
-import { Breadcrumbs } from '../../../components'
+import { Breadcrumbs, Loading, NoResults } from '../../../components'
 import {
   AuditResult,
   AuditResultFromAPI,
   AuditResultParsed,
   BreadcrumbLink,
 } from '../../../models'
-import { fetchFromApi, ROUTES } from '../../../utils'
-
-interface PageProps {
-  audit: AuditResultParsed
-}
+import { ROUTES } from '../../../utils'
+import { useApi } from '../../../utils'
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
   {
@@ -25,28 +23,42 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
   },
 ]
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const resultFromAPI = (
-    await fetchFromApi(`/api/audits/${context.query.auditId}`, 'GET')
-  ).message
+const AuditByIdOverview = () => {
+  const [audit, setAudit] = useState<AuditResultParsed | null>(null)
+  const [loading, setLoading] = useState(false)
+  const { query } = useRouter()
+  const { fetchFromApi } = useApi()
 
-  const auditParsed: AuditResultParsed = {
-    ...(resultFromAPI as AuditResultFromAPI),
-    audit_result: JSON.parse(
-      (resultFromAPI as AuditResultFromAPI).audit_result
-    ) as AuditResult,
-  }
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true)
 
-  return {
-    props: {
-      audit: auditParsed,
-    },
-  }
-}
+      const resultFromAPI = (
+        await fetchFromApi(`/api/audits/${query.auditId}`, 'GET')
+      ).message
 
-const AuditByIdOverview = ({ audit }: PageProps) => {
+      const auditParsed: AuditResultParsed = {
+        ...(resultFromAPI as AuditResultFromAPI),
+        audit_result: JSON.parse(
+          (resultFromAPI as AuditResultFromAPI).audit_result
+        ) as AuditResult,
+      }
+
+      setAudit(auditParsed)
+    } catch (error) {
+      setAudit(null)
+    } finally {
+      setLoading(false)
+    }
+  }, [fetchFromApi, query.auditId])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  if (loading) return <Loading />
+  if (!audit) return <NoResults asError404 />
+
   return (
     <>
       <Breadcrumbs links={BREADCRUMB_LINKS} />
@@ -62,13 +74,17 @@ const AuditByIdOverview = ({ audit }: PageProps) => {
           {new Date(audit.date_of_request).toString()}
         </Text>
         <Text>
-          Accessibility: {audit.audit_result.accessibility.score * 100}
+          Accessibility:{' '}
+          {Math.ceil(audit.audit_result.accessibility.score * 100)}
         </Text>
         <Text>
-          Best Practices: {audit.audit_result['best-practices'].score * 100}
+          Best Practices:{' '}
+          {Math.ceil(audit.audit_result['best-practices'].score * 100)}
         </Text>
-        <Text>Performance: {audit.audit_result.performance.score * 100}</Text>
-        <Text>SEO: {audit.audit_result.seo.score * 100}</Text>
+        <Text>
+          Performance: {Math.ceil(audit.audit_result.performance.score * 100)}
+        </Text>
+        <Text>SEO: {Math.ceil(audit.audit_result.seo.score * 100)}</Text>
       </Container>
     </>
   )

@@ -33,7 +33,6 @@
   "name": "laravel/laravel",
   "prefer-stable": true,
   "require": {
-    "php": "^7.3|^8.0",
     "dzava/lighthouse": "^0.1.0",
     "fruitcake/laravel-cors": "^2.0",
     "guzzlehttp/guzzle": "^7.0.1",
@@ -43,6 +42,7 @@
     "laravel/tinker": "^2.5",
     "laravel/ui": "^3.4",
     "nyholm/psr7": "^1.4",
+    "php": "^7.3|^8.0",
     "php-open-source-saver/jwt-auth": "^1.4",
     "symfony/psr-http-message-bridge": "^2.1"
   },
@@ -66,6 +66,7 @@
     "post-install-cmd": [
       "@php artisan key:generate",
       "@php artisan storage:link",
+      "@php artisan jwt:generate",
       "@php artisan migrate",
       "@php artisan ide-helper:generate"
     ],
@@ -75,8 +76,7 @@
     "post-update-cmd": [
       "@php artisan vendor:publish --tag=laravel-assets --ansi",
       "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-      "@php artisan ide-helper:generate",
-      "@php artisan ide-helper:meta"
+      "@php artisan ide-helper:generate"
     ]
   },
   "type": "project"

@@ -8,9 +8,7 @@ interface Props {
 const NoResults = ({ asError404 = false }: Props) => {
   return (
     <>
-      <Heading textAlign="center">
-        {asError404 ? 'Not Found' : 'No Results'}
-      </Heading>
+      {asError404 && <Heading textAlign="center">Page Not Found</Heading>}
       {!asError404 && (
         <Text mt="8" mb="8" textAlign="center" fontWeight="bold">
           No results found.

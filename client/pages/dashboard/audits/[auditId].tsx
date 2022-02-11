@@ -1,8 +1,8 @@
-import { Container, Heading, Spinner, Text } from '@chakra-ui/react'
+import { Container, Heading, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 
-import { Breadcrumbs } from '../../../components'
+import { Breadcrumbs, Loading } from '../../../components'
 import {
   AuditResult,
   AuditResultFromAPI,
@@ -56,12 +56,7 @@ const AuditByIdOverview = () => {
     fetchData()
   }, [fetchData])
 
-  if (loading)
-    return (
-      <Container height="100%" width="100%">
-        <Spinner />
-      </Container>
-    )
+  if (loading) return <Loading />
   if (!audit) return <p>You have to be authenticated to view this page.</p>
 
   return (

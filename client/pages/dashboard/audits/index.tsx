@@ -26,7 +26,12 @@ import {
   SUCCESS_STATUS_CODE,
   UNAUTHORIZED_STATUS_CODE,
 } from '../../../utils'
-import { Breadcrumbs, NoResults, SignIn } from '../../../components'
+import {
+  Breadcrumbs,
+  Loading,
+  NoResults,
+  SignInForm,
+} from '../../../components'
 import { useApi } from '../../../utils'
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
@@ -38,37 +43,36 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 
 const AuditsIndex = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setCookie, removeCookie] = useCookies()
+  const [_, _setCookie, removeCookie] = useCookies()
   const [audits, setAudits] = useState<AuditResultParsed[]>([])
   const [isUnauthorized, setIsUnauthorized] = useState(false)
   const { fetchFromApi } = useApi()
+  const [isLoading, setIsLoading] = useState(false)
 
   const parseAudits = useCallback(async () => {
-    const { status, message } = await fetchFromApi('/api/audits', 'GET', null)
+    try {
+      setIsLoading(true)
+      const { status, message } = await fetchFromApi('/api/audits', 'GET', null)
 
-    if (status === UNAUTHORIZED_STATUS_CODE) {
+      if (status === UNAUTHORIZED_STATUS_CODE) {
+        setIsUnauthorized(true)
+        return
+      }
+
+      const auditsParsed: AuditResultParsed[] = (
+        message as AuditResultFromAPI[]
+      ).map(r => ({
+        ...r,
+        audit_result: JSON.parse(r.audit_result) as AuditResult,
+      }))
+
+      setAudits(auditsParsed)
+    } catch (err) {
+      if (audits.length !== 0) setAudits([])
       setIsUnauthorized(true)
-      return
+    } finally {
+      setIsLoading(false)
     }
-
-    const auditsParsed: AuditResultParsed[] = (
-      message as AuditResultFromAPI[]
-    ).map(r => ({
-      ...r,
-      audit_result: JSON.parse(r.audit_result) as AuditResult,
-    }))
-
-    setAudits(auditsParsed)
-  }, [])
-
-  const login = useCallback(async () => {
-    const res = await fetchFromApi('/api/auth/login', 'POST', {
-      email: 'stefd996@gmail.com',
-      password: 'password',
-    })
-
-    if (res.status === SUCCESS_STATUS_CODE) setIsUnauthorized(false)
-    setCookie('accessToken', res.access_token)
   }, [])
 
   const logout = useCallback(async () => {
@@ -79,16 +83,15 @@ const AuditsIndex = () => {
   }, [])
 
   useEffect(() => {
-    login()
     parseAudits()
+  }, [isUnauthorized])
 
-    // logout()
-  }, [parseAudits, login, logout])
+  if (isLoading) return <Loading />
 
   if (isUnauthorized) {
     return (
       <Container maxW="container.xl">
-        <SignIn />
+        <SignInForm setIsUnauthorized={setIsUnauthorized} />
       </Container>
     )
   }

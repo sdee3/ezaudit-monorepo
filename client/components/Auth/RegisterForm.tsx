@@ -16,7 +16,7 @@ import {
 import { useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
-const Register = () => {
+const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
@@ -83,4 +83,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default RegisterForm

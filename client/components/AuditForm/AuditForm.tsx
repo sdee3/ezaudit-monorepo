@@ -12,7 +12,7 @@ import Alert from '../Alert'
 import { EMAIL_REGEX_PATTERN, WEBSITE_REGEX_PATTERN } from '../../utils'
 import useAlert from '../Alert/hooks'
 import { useInput } from './hooks'
-import { InputValues } from '../../models'
+import { HomeAuditInputValues } from '../../models'
 
 const AuditForm = () => {
   const {
@@ -21,7 +21,7 @@ const AuditForm = () => {
     setValue,
     formState: { errors },
     trigger,
-  } = useForm<InputValues>({
+  } = useForm<HomeAuditInputValues>({
     mode: 'onChange',
     defaultValues: { domain: '', email: '' },
   })
@@ -87,7 +87,7 @@ const AuditForm = () => {
         </FormControl>
       </form>
 
-      {alertMessage?.message?.length > 0 && (
+      {message?.length > 0 && (
         <Alert
           marginTop={6}
           alertMessage={message}

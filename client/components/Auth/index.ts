@@ -1,4 +1,4 @@
-import SignIn from './SignIn'
-import Register from './Register'
+import SignInForm from './SignInForm'
+import RegisterForm from './RegisterForm'
 
-export { SignIn, Register }
+export { SignInForm, RegisterForm }

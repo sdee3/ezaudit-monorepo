@@ -7,7 +7,11 @@ const useApi = () => {
   const [cookies] = useCookies()
 
   const fetchFromApi = useCallback(
-    async (url: string, method: 'GET' | 'POST', body?: object) => {
+    async (
+      url: string,
+      method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+      body?: object
+    ) => {
       try {
         const response = await fetch(`${process.env.API_URL}${url}`, {
           method,
@@ -25,13 +29,21 @@ const useApi = () => {
 
         const parsedBody = await response.json()
 
+        if (
+          [400, 401, 402, 403, 404, 405, 408, 500, 502].includes(
+            response.status
+          )
+        ) {
+          throw new Error(response.status.toString())
+        }
+
         return {
           message: parsedBody.message,
           status: response.status,
           ...parsedBody,
         } as ApiResponse
       } catch (error) {
-        return error
+        return { status: Number.parseInt(error.message) }
       }
     },
     [cookies]

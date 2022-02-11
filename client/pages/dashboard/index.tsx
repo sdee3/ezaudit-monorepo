@@ -29,23 +29,33 @@ const DashboardPage = () => {
       <Heading mb="8">Dashboard</Heading>
       <hr />
       <Box minHeight="50vh">
-        <Text fontSize="3xl" fontWeight="bold" mb="4" mt="8">
-          Your Data
-        </Text>
-        <Text>{JSON.stringify(user)}</Text>
-        <Text fontSize="3xl" fontWeight="bold" mb="4" mt="8">
-          Audits
-        </Text>
-        <Button data-cy="viewAuditsBtn" onClick={() => push(ROUTES.userAudits)}>
-          View Your Audits
-        </Button>
+        <Box mb={8}>
+          <Text fontSize="3xl" fontWeight="bold" mb="4" mt="8">
+            Your Data
+          </Text>
+          <Text>{JSON.stringify(user)}</Text>
+        </Box>
         <hr />
-        <Text fontSize="3xl" fontWeight="bold" mb="4" mt="8">
-          Sign Out
-        </Text>
-        <Button data-cy="signOutBtn" onClick={logout}>
-          Sign Out
-        </Button>
+        <Box mb={8}>
+          <Text fontSize="3xl" fontWeight="bold" mb="4" mt="8">
+            Audits
+          </Text>
+          <Button
+            data-cy="viewAuditsBtn"
+            onClick={() => push(ROUTES.userAudits)}
+          >
+            View Your Audits
+          </Button>
+        </Box>
+        <hr />
+        <Box mb={8}>
+          <Text fontSize="3xl" fontWeight="bold" mb="4" mt="8">
+            Account Settings
+          </Text>
+          <Button data-cy="signOutBtn" onClick={logout}>
+            Sign Out
+          </Button>
+        </Box>
       </Box>
     </Container>
   )

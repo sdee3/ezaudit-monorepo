@@ -2,7 +2,7 @@ import { Container, Heading, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 
-import { Breadcrumbs, Loading } from '../../../components'
+import { Breadcrumbs, Loading, NoResults } from '../../../components'
 import {
   AuditResult,
   AuditResultFromAPI,
@@ -57,7 +57,7 @@ const AuditByIdOverview = () => {
   }, [fetchData])
 
   if (loading) return <Loading />
-  if (!audit) return <p>You have to be authenticated to view this page.</p>
+  if (!audit) return <NoResults asError404 />
 
   return (
     <>

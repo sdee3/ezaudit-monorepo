@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Jobs\ProcessAudit;
 use App\Models\Audit;
 use App\Models\User;
+use Illuminate\Log\Logger;
+use JWTAuth;
 
 class AuditController extends Controller
 {
@@ -73,7 +75,9 @@ class AuditController extends Controller
 	 */
 	public function index()
 	{
-		$audits = Audit::all();
+		$user = JWTAuth::user();
+		Logger($user);
+		$audits = Audit::where('email', $user->email)->get();
 
 		return Response()->json([
 			'message' => $audits
@@ -87,7 +91,8 @@ class AuditController extends Controller
 	 */
 	public function single(Request $request)
 	{
-		$audit = Audit::where('id', $request['id'])->first();
+		$user = JWTAuth::user();
+		$audit = Audit::where(['id' => $request['id'], 'email' => $user->email])->first();
 
 		return Response()->json([
 			'message' => $audit

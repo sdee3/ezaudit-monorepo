@@ -36,7 +36,7 @@ export const ResetPasswordForm = ({ email }: Props) => {
   })
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCookie, _removeCookie] = useCookies()
-  const { fetchFromApi } = useApi()
+  const [fetchFromApi] = useApi()
   const { reload } = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()

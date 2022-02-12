@@ -41,8 +41,8 @@ const AuditsIndex = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, _setCookie, _removeCookie] = useCookies()
   const [audits, setAudits] = useState<AuditResultParsed[] | null>(null)
-  const { fetchFromApi } = useApi()
-  const { user } = useUser()
+  const [fetchFromApi] = useApi()
+  const { user, clearUser } = useUser()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -51,7 +51,10 @@ const AuditsIndex = () => {
       setIsLoading(true)
       const { status, message } = await fetchFromApi('/api/audits', 'GET', null)
 
-      if (status === UNAUTHORIZED_STATUS_CODE) return
+      if (status === UNAUTHORIZED_STATUS_CODE) {
+        if (user !== null) clearUser()
+        throw new Error()
+      }
 
       const auditsParsed: AuditResultParsed[] = (
         message as AuditResultFromAPI[]
@@ -66,7 +69,7 @@ const AuditsIndex = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [audits, fetchFromApi])
+  }, [audits?.length, clearUser, fetchFromApi, user])
 
   useEffect(() => {
     if (audits !== null) return

@@ -7,6 +7,7 @@ import {
   Breadcrumbs,
   Loading,
   NoResults,
+  useUser,
 } from '../../../components'
 import { ResetPasswordForm } from '../../../components/Auth/ResetPasswordForm'
 import {
@@ -15,7 +16,11 @@ import {
   AuditResultParsed,
   BreadcrumbLink,
 } from '../../../models'
-import { ROUTES, SUCCESS_STATUS_CODE } from '../../../utils'
+import {
+  ROUTES,
+  SUCCESS_STATUS_CODE,
+  UNAUTHORIZED_STATUS_CODE,
+} from '../../../utils'
 import { useApi } from '../../../utils'
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
@@ -34,7 +39,8 @@ const AuditByIdOverview = () => {
   const [email, setEmail] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const { push, query } = useRouter()
-  const { fetchFromApi } = useApi()
+  const [fetchFromApi] = useApi()
+  const { user, clearUser } = useUser()
 
   const fetchEmailDataFromUrl = useCallback(async () => {
     const potentialEmail = query?.e
@@ -46,20 +52,28 @@ const AuditByIdOverview = () => {
       setEmail(resultFromAPI.email as string)
       push(ROUTES.audit(query.auditId as string))
     }
-  }, [fetchFromApi, push, query.auditId, query?.e])
+  }, [fetchFromApi, push, query?.auditId, query?.e])
 
   const fetchData = useCallback(async () => {
+    if (!query?.auditId || user === null) return
+
     try {
       setLoading(true)
 
-      const resultFromAPI = (
-        await fetchFromApi(`/api/audits/${query.auditId}`, 'GET')
-      ).message
+      const resultFromAPI = await fetchFromApi(
+        `/api/audits/${query.auditId}`,
+        'GET'
+      )
+
+      if (resultFromAPI.status === UNAUTHORIZED_STATUS_CODE) {
+        if (user !== null) clearUser()
+        throw new Error()
+      }
 
       const auditParsed: AuditResultParsed = {
-        ...(resultFromAPI as AuditResultFromAPI),
+        ...(resultFromAPI.message as AuditResultFromAPI),
         audit_result: JSON.parse(
-          (resultFromAPI as AuditResultFromAPI).audit_result
+          (resultFromAPI.message as AuditResultFromAPI).audit_result
         ) as AuditResultCategories,
       }
 
@@ -69,12 +83,12 @@ const AuditByIdOverview = () => {
     } finally {
       setLoading(false)
     }
-  }, [fetchFromApi, query.auditId])
+  }, [clearUser, fetchFromApi, query?.auditId, user])
 
   useEffect(() => {
     query?.e && fetchEmailDataFromUrl()
-    !email && fetchData()
-  }, [email, fetchData, fetchEmailDataFromUrl, query?.e])
+    !email && user && fetchData()
+  }, [email, fetchData, fetchEmailDataFromUrl, query?.e, user])
 
   if (loading) return <Loading />
   if (!audit && !email) return <NoResults asError404 />

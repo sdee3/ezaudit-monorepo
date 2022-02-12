@@ -8,7 +8,7 @@ import { ROUTES, SUCCESS_STATUS_CODE, useApi } from '../../utils'
 
 const DashboardPage = () => {
   const { push } = useRouter()
-  const { fetchFromApi } = useApi()
+  const [fetchFromApi] = useApi()
   const { user } = useUser()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, _setCookie, removeCookie] = useCookies()

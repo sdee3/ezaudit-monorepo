@@ -17,6 +17,8 @@ yarn-error.log
 /.vscode
 /client/.next
 /client/out
+/client/public/sw*
+/client/public/workbox-*
 .DS_Store
 .pnpm-debug.log
 .phpstorm.meta.php

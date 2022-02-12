@@ -47,7 +47,7 @@ const useApi = () => {
     [cookies]
   )
 
-  return { fetchFromApi }
+  return [fetchFromApi]
 }
 
 export { useApi }

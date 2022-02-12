@@ -37,7 +37,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
   })
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCookie, _removeCookie] = useCookies()
-  const { fetchFromApi } = useApi()
+  const [fetchFromApi] = useApi()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
 

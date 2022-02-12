@@ -7,14 +7,14 @@ export const useUser = () => {
   const [cookies, _setCookie, removeCookie] = useCookies()
 
   useEffect(() => {
-    if (!cookies.user) {
+    if (!cookies?.user) {
       if (!user) return
 
       setUser(null)
     }
 
     setUser(cookies.user)
-  }, [cookies.user, user])
+  }, [cookies?.user, user])
 
   const clearUser = useCallback(() => {
     setUser(null)

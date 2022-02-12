@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import {
   AuditResult,
+  AuthWrapper,
   Breadcrumbs,
   Loading,
   NoResults,
@@ -55,7 +56,7 @@ const AuditByIdOverview = () => {
   }, [fetchFromApi, push, query?.auditId, query?.e])
 
   const fetchData = useCallback(async () => {
-    if (!query?.auditId || user === null) return
+    if (!query?.auditId) return
 
     try {
       setLoading(true)
@@ -87,10 +88,11 @@ const AuditByIdOverview = () => {
 
   useEffect(() => {
     query?.e && fetchEmailDataFromUrl()
-    !email && user && fetchData()
-  }, [email, fetchData, fetchEmailDataFromUrl, query?.e, user])
+    !email && fetchData()
+  }, [email, fetchData, fetchEmailDataFromUrl, query?.e])
 
   if (loading) return <Loading />
+  if (!user) return <AuthWrapper />
   if (!audit && !email) return <NoResults asError404 />
 
   return (

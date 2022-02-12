@@ -10,7 +10,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useCookies } from 'react-cookie'
 import { useRouter } from 'next/router'
@@ -19,6 +19,8 @@ import Alert from '../Alert'
 import { ResetPasswordInputValues } from '../../models'
 import { UNAUTHORIZED_STATUS_CODE, useApi } from '../../utils'
 import useAlert from '../Alert/hooks'
+import { useUser } from './hooks'
+import NoResults from '../NoResults'
 
 interface Props {
   email: string
@@ -37,9 +39,11 @@ export const ResetPasswordForm = ({ email }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCookie, _removeCookie] = useCookies()
   const [fetchFromApi] = useApi()
+  const { user } = useUser()
   const { reload } = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
+  const { query } = useRouter()
 
   const passwordWatchers = watch(['password', 'password_confirmation'])
 
@@ -47,16 +51,6 @@ export const ResetPasswordForm = ({ email }: Props) => {
     () => !!errors?.password || !!errors?.password_confirmation || !isValid,
     [errors?.password, errors?.password_confirmation, isValid]
   )
-
-  useEffect(() => {
-    if (!email) return
-
-    setAlertMessage({
-      message:
-        'You have successfully changed your password. Proceed to sign in.',
-      state: 'success',
-    })
-  }, [email, setAlertMessage])
 
   const onSubmit: SubmitHandler<ResetPasswordInputValues> = useCallback(
     async ({ password }) => {
@@ -129,50 +123,53 @@ export const ResetPasswordForm = ({ email }: Props) => {
           boxShadow="lg"
           p={8}
         >
-          <form onSubmit={() => handleSubmit(onSubmit)}>
-            <Stack spacing={4}>
-              <FormControl id="password">
-                <FormLabel>Password</FormLabel>
-                <Input
-                  data-cy="registerPasswordInput"
-                  type="password"
-                  {...register('password', {
-                    required: true,
-                  })}
-                  isInvalid={!!errors?.password}
-                />
-              </FormControl>
-              <FormControl id="password_confirmation">
-                <FormLabel>Confirm your password</FormLabel>
-                <Input
-                  data-cy="registerPasswordConfirmationInput"
-                  type="password"
-                  {...register('password_confirmation', {
-                    required: true,
-                  })}
-                  isInvalid={
-                    !!errors?.password_confirmation ||
-                    (passwordWatchers[0] !== passwordWatchers[1] &&
-                      passwordWatchers[1].length > 0)
-                  }
-                />
-              </FormControl>
-              <Stack spacing={10}>
-                <Button
-                  bg="blue.400"
-                  color="white"
-                  _hover={{
-                    bg: 'blue.500',
-                  }}
-                  disabled={isSubmitDisabled}
-                  isLoading={isLoading}
-                  onClick={handleSubmit(onSubmit)}
-                >
-                  Submit
-                </Button>
+          {user && query?.e && <NoResults asError404 />}
+          {!user && query?.e && (
+            <form onSubmit={() => handleSubmit(onSubmit)}>
+              <Stack spacing={4}>
+                <FormControl id="password">
+                  <FormLabel>Password</FormLabel>
+                  <Input
+                    data-cy="registerPasswordInput"
+                    type="password"
+                    {...register('password', {
+                      required: true,
+                    })}
+                    isInvalid={!!errors?.password}
+                  />
+                </FormControl>
+                <FormControl id="password_confirmation">
+                  <FormLabel>Confirm your password</FormLabel>
+                  <Input
+                    data-cy="registerPasswordConfirmationInput"
+                    type="password"
+                    {...register('password_confirmation', {
+                      required: true,
+                    })}
+                    isInvalid={
+                      !!errors?.password_confirmation ||
+                      (passwordWatchers[0] !== passwordWatchers[1] &&
+                        passwordWatchers[1].length > 0)
+                    }
+                  />
+                </FormControl>
+                <Stack spacing={10}>
+                  <Button
+                    bg="blue.400"
+                    color="white"
+                    _hover={{
+                      bg: 'blue.500',
+                    }}
+                    disabled={isSubmitDisabled}
+                    isLoading={isLoading}
+                    onClick={handleSubmit(onSubmit)}
+                  >
+                    Submit
+                  </Button>
+                </Stack>
               </Stack>
-            </Stack>
-          </form>
+            </form>
+          )}
         </Box>
       </Stack>
     </Flex>

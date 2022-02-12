@@ -46,10 +46,10 @@ const AuditsIndex = () => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const parseAudits = useCallback(async () => {
+  const fetchAudits = useCallback(async () => {
     try {
       setIsLoading(true)
-      const { status, message } = await fetchFromApi('/api/audits', 'GET', null)
+      const { status, message } = await fetchFromApi('/api/audits', 'GET')
 
       if (status === UNAUTHORIZED_STATUS_CODE) {
         if (user !== null) clearUser()
@@ -73,8 +73,8 @@ const AuditsIndex = () => {
 
   useEffect(() => {
     if (audits !== null) return
-    !user && parseAudits()
-  }, [audits, parseAudits, user])
+    user && fetchAudits()
+  }, [audits, fetchAudits, user])
 
   if (isLoading) return <Loading />
   if (!user) return <AuthWrapper />

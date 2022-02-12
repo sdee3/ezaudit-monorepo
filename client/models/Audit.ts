@@ -10,11 +10,11 @@ export interface AuditResultParsed {
   id: string
   domain: string
   email: string
-  audit_result: AuditResult
+  audit_result: AuditResultCategories
   date_of_request: string
 }
 
-export interface AuditResult {
+export interface AuditResultCategories {
   accessibility: AuditAccessibility
   best_practices: AuditBestPractices
   performance: AuditPerformance

@@ -5,7 +5,8 @@ import { ApiResponse } from '../../models'
 import { ERROR_CODES } from '../constants'
 
 const useApi = () => {
-  const [cookies] = useCookies()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, _setCookie, removeCookie] = useCookies()
 
   const fetchFromApi = useCallback(
     async (

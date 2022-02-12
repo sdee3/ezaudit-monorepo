@@ -50,13 +50,17 @@ class AuditController extends Controller
 			$correctDomain = "https://" . $domainFromRequest;
 
 		try {
+			$newUser = null;
 			// Create a new passwordless user if the one provided doesn't exist
 			if (!User::where('email', $emailFromRequest)->first()) {
-				User::create(['email' => $emailFromRequest, 'name' => $emailFromRequest, 'password' => '']);
+				$newUser = User::create([
+					'email' => $emailFromRequest,
+					'password' => bcrypt('CHANGE_ME')
+				]);
 			}
 
 
-			ProcessAudit::dispatch($correctDomain, $emailFromRequest);
+			ProcessAudit::dispatch($correctDomain, $emailFromRequest, $newUser !== null);
 			return Response()->json(['message' => 'Audit scheduled successfully! You will receive an email once the audit is ready.'], 202);
 		} catch (\Throwable $th) {
 			report($th);

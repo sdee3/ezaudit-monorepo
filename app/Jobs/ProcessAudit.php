@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\AuditController;
 use App\Mail\AuditCompleted;
 use App\Models\Audit;
 use Illuminate\Bus\Queueable;
@@ -19,16 +18,18 @@ class ProcessAudit implements ShouldQueue
 
     protected string $domainToAudit;
     protected string $email;
+    protected bool $toNewUser;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $domainToAudit, string $email = "stefd996@gmail.com")
+    public function __construct(string $domainToAudit, string $email = "stefd996@gmail.com", bool $toNewUser = false)
     {
         $this->domainToAudit = $domainToAudit;
         $this->email = $email;
+        $this->toNewUser = $toNewUser;
     }
 
     /**
@@ -81,9 +82,10 @@ class ProcessAudit implements ShouldQueue
             ]);
 
             // Send audit result email
-            $mailToSend = new AuditCompleted($audit);
+            // If a new user was just created, send a different link for a password reset.
+            $mailToSend = new AuditCompleted($audit, $this->toNewUser);
 
-            Mail::to($this->email)->cc("stefd996@gmail.com")->send($mailToSend);
+            Mail::to($this->email)->cc(env('APP_TELESCOPE_EMAIL'))->send($mailToSend);
         } catch (\Dzava\Lighthouse\Exceptions\AuditFailedException $e) {
             report($e->getOutput());
         }

@@ -16,6 +16,11 @@ export type RegisterInputValues = {
   password_confirmation: string
 }
 
+export type ResetPasswordInputValues = {
+  password: string
+  password_confirmation: string
+}
+
 export type Errors = {
   domain?: FieldError
 }

@@ -4,7 +4,8 @@
 			$audit->domain }}</a> on EZ Audit. We are pleased to inform you that it&apos;s ready for viewing and exporting on
 		your
 		Dashboard!</a></p>
-	<a href={{env('APP_URL') . '/dashboard/audits/' . $audit->id}} target="_blank">
+	<a href={{ env('APP_URL') . '/dashboard/audits/' . $audit->id . '?e=' . $encryptedPart}}
+		target="_blank">
 		<button>View Audit</button>
 	</a>
 	<p>Thank you for using EZ Audit!</p>

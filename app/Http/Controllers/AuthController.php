@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use JWTAuth;
 use App\Models\User;
 use Validator;
@@ -16,7 +17,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'changePassword']]);
     }
     /**
      * Get a JWT via given credentials.
@@ -25,7 +26,7 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make(['email' => $request->email, 'password' => $request->password ?? ''], [
+        $validator = Validator::make(['email' => $request->email, 'password' => $request->password], [
             'email' => 'required|email',
             'password' => 'string',
         ]);
@@ -108,5 +109,18 @@ class AuthController extends Controller
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'user' => JWTAuth::user()
         ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $password = bcrypt($request->password);
+
+        $user = User::where('email', $request->email)->first();
+        $user->password = $password;
+        $user->save();
+
+        $this->login(new Request(['email' => $user->email, 'password' => $request->password]));
+
+        return response()->json(['message' => 'Password changed.', 'access_token' => JWTAuth::fromUser(JWTAuth::user()), 'user' => JWTAuth::user()]);
     }
 }

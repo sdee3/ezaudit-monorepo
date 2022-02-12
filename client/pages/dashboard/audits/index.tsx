@@ -19,7 +19,7 @@ import {
   AuditResultParsed,
   BreadcrumbLink,
 } from '../../../models'
-import { AuditResult } from '../../../models/Audit'
+import { AuditResultCategories } from '../../../models/Audit'
 import { ROUTES, UNAUTHORIZED_STATUS_CODE } from '../../../utils'
 import {
   Breadcrumbs,
@@ -57,7 +57,7 @@ const AuditsIndex = () => {
         message as AuditResultFromAPI[]
       ).map(r => ({
         ...r,
-        audit_result: JSON.parse(r.audit_result) as AuditResult,
+        audit_result: JSON.parse(r.audit_result) as AuditResultCategories,
       }))
 
       setAudits(auditsParsed)
@@ -70,11 +70,10 @@ const AuditsIndex = () => {
 
   useEffect(() => {
     if (audits !== null) return
-    user !== null && parseAudits()
+    !user && parseAudits()
   }, [audits, parseAudits, user])
 
   if (isLoading) return <Loading />
-
   if (!user) return <AuthWrapper />
 
   if (!audits || audits.length === 0) {
@@ -120,10 +119,18 @@ const AuditsIndex = () => {
                         {audit.domain}
                       </a>
                     </Td>
-                    <Td>{audit.audit_result.accessibility.score * 100}</Td>
-                    <Td>{audit.audit_result['best-practices'].score * 100}</Td>
-                    <Td>{audit.audit_result.performance.score * 100}</Td>
-                    <Td>{audit.audit_result.seo.score * 100}</Td>
+                    <Td>
+                      {Math.ceil(audit.audit_result.accessibility.score * 100)}
+                    </Td>
+                    <Td>
+                      {Math.ceil(
+                        audit.audit_result['best-practices'].score * 100
+                      )}
+                    </Td>
+                    <Td>
+                      {Math.ceil(audit.audit_result.performance.score * 100)}
+                    </Td>
+                    <Td>{Math.ceil(audit.audit_result.seo.score * 100)}</Td>
                   </Tr>
                 </Link>
               ))}

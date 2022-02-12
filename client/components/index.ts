@@ -1,11 +1,23 @@
+// TODO: Fix how you export and import these
+
 import App from './App'
 import Alert from './Alert'
-import Auditform from './AuditForm'
+import AuditForm from './AuditForm'
+import { AuditResult } from './AuditResult'
 import Breadcrumbs from './Breadcrumbs'
 import Navbar from './Navbar'
 import Layout from './Layout'
 import NoResults from './NoResults'
 
-export { App, Alert, Auditform, Breadcrumbs, Navbar, NoResults, Layout }
+export {
+  App,
+  Alert,
+  AuditForm,
+  AuditResult,
+  Breadcrumbs,
+  Navbar,
+  NoResults,
+  Layout,
+}
 export * from './Auth'
 export * from './Loading'

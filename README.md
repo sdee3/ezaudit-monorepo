@@ -18,10 +18,11 @@ The next best thing after [Google Lighthouse](https://developers.google.com/web/
 To get both Laravel and Next.js apps up and running, it's recommended to go through the following steps:
 
 1. Create a `.env` file both on the root and in `/client` (based on the example files) 📝
-   1. You have to set 3 path variables in Laravel's `.env`:
+   1. You have to set 4 variables in Laravel's `.env`:
       1. `APP_NODE_PATH` points to your Node.js executable. Find it by typing `which node` in your terminal
       2. `APP_LIGHTHOUSE_PATH` points to your global installation of Lighthouse. Find it with `which lighthouse`.
       3. `APP_PUBLIC_PATH` is the absolute path to this project's **public** folder
+      4. `APP_API_ENCRYPTION_KEY` - any long-ish string (at least 8 characters).
 2. `docker-compose up --detach` 🎣
 3. `composer install` 🎶
 4. `pnpm i` 🖥

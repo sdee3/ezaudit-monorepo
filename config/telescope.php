@@ -76,8 +76,7 @@ return [
     */
 
     'middleware' => [
-        'api',
-        Authorize::class,
+        'api'
     ],
 
     /*

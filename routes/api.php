@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->get('/login', function () {
+Route::middleware('api')->get('/login', function () {
     if (Auth::user()) {
         return redirect('/telescope');
     }
@@ -35,6 +35,7 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login-telescope', [AuthController::class, 'loginToTelescope']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -46,6 +47,7 @@ Route::group([
 
 Route::middleware('auth')->group(function () {
     Route::get('/user/{hashedEmail}', [UserController::class, 'verifyHashedEmail'])->withoutMiddleware('auth');
+
 
     Route::post('/audit', AuditController::class)->withoutMiddleware('auth');
 

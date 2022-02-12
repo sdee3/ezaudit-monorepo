@@ -17,7 +17,15 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'changePassword']]);
+        $this->middleware('auth:api', [
+            'except' =>
+            [
+                'login',
+                'loginToTelescope',
+                'register',
+                'changePassword'
+            ]
+        ]);
     }
     /**
      * Get a JWT via given credentials.
@@ -122,5 +130,25 @@ class AuthController extends Controller
         $this->login(new Request(['email' => $user->email, 'password' => $request->password]));
 
         return response()->json(['message' => 'Password changed.', 'access_token' => JWTAuth::fromUser(JWTAuth::user()), 'user' => JWTAuth::user()]);
+    }
+
+    public function loginToTelescope(Request $request)
+    {
+        $validator = Validator::make(['email' => $request->email, 'password' => $request->password], [
+            'email' => 'required|email',
+            'password' => 'string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/login')->withErrors($validator->errors());
+        }
+
+        if (!$token = JWTAuth::attempt($validator->validated())) {
+            return redirect('/login')->withErrors(['error' => 'Unauthorized']);
+        }
+
+        $this->createNewToken($token);
+
+        return redirect('/telescope');
     }
 }

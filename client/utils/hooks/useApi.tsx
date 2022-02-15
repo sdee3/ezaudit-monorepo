@@ -1,12 +1,11 @@
-import { useCallback } from 'react'
-import { useCookies } from 'react-cookie'
+import { useCallback, useContext } from 'react'
 
 import { ApiResponse } from '../../models'
 import { ERROR_CODES } from '../constants'
+import { AuthContext } from '../../components'
 
 const useApi = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookies, _setCookie, removeCookie] = useCookies()
+  const { accessToken } = useContext(AuthContext)
 
   const fetchFromApi = useCallback(
     async (
@@ -20,7 +19,7 @@ const useApi = () => {
           headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
-            Authorization: `Bearer ${cookies['accessToken']}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           mode:
             process.env.API_URL === 'https://ezaudit.me'
@@ -44,7 +43,7 @@ const useApi = () => {
         return { status: Number.parseInt(error.message) }
       }
     },
-    [cookies]
+    [accessToken]
   )
 
   return [fetchFromApi]

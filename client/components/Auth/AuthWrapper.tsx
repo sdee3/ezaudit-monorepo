@@ -1,8 +1,7 @@
 import { Link, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 
-import { RegisterForm } from './RegisterForm'
-import { SignInForm } from './SignInForm'
+import { SignInForm, RegisterForm } from './components'
 
 export const AuthWrapper = () => {
   const [option, setOption] = useState<'login' | 'register'>('login')

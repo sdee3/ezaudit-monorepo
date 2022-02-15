@@ -11,8 +11,8 @@ import {
   Tr,
 } from '@chakra-ui/react'
 import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
-import { useCookies } from 'react-cookie'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import Head from 'next/head'
 
 import {
   AuditResultFromAPI,
@@ -26,7 +26,7 @@ import {
   Loading,
   NoResults,
   AuthWrapper,
-  useUser,
+  AuthContext,
 } from '../../../components'
 import { useApi } from '../../../utils'
 
@@ -38,11 +38,9 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 ]
 
 const AuditsIndex = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, _setCookie, _removeCookie] = useCookies()
   const [audits, setAudits] = useState<AuditResultParsed[] | null>(null)
   const [fetchFromApi] = useApi()
-  const { user, clearUser } = useUser()
+  const { user } = useContext(AuthContext)
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -52,7 +50,6 @@ const AuditsIndex = () => {
       const { status, message } = await fetchFromApi('/api/audits', 'GET')
 
       if (status === UNAUTHORIZED_STATUS_CODE) {
-        if (user !== null) clearUser()
         throw new Error()
       }
 
@@ -69,7 +66,7 @@ const AuditsIndex = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [audits?.length, clearUser, fetchFromApi, user])
+  }, [audits?.length, fetchFromApi])
 
   useEffect(() => {
     if (audits !== null) return
@@ -81,17 +78,25 @@ const AuditsIndex = () => {
 
   if (!audits || audits.length === 0) {
     return (
-      <Container maxW="container.xl">
-        <Heading textAlign="center" mb="8">
-          Your Audits
-        </Heading>
-        <NoResults />
-      </Container>
+      <>
+        <Head>
+          <title>Your Audits | EZ Audit</title>
+        </Head>
+        <Container maxW="container.xl">
+          <Heading textAlign="center" mb="8">
+            Your Audits
+          </Heading>
+          <NoResults />
+        </Container>
+      </>
     )
   }
 
   return (
     <>
+      <Head>
+        <title>Your Audits | EZ Audit</title>
+      </Head>
       <Breadcrumbs links={BREADCRUMB_LINKS} />
       <Container maxW="container.xl">
         <Heading textAlign="center" mb="8">

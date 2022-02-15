@@ -5,7 +5,7 @@ interface Props {
   asError404?: boolean
 }
 
-const NoResults = ({ asError404 = false }: Props) => {
+export const NoResults = ({ asError404 = false }: Props) => {
   return (
     <>
       {asError404 && <Heading textAlign="center">Page Not Found</Heading>}
@@ -31,5 +31,3 @@ const NoResults = ({ asError404 = false }: Props) => {
     </>
   )
 }
-
-export default NoResults

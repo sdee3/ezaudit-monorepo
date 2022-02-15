@@ -9,74 +9,71 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useCookies } from 'react-cookie'
 
-import Alert from '../Alert'
-import { SignInInputValues } from '../../models'
+import { Alert } from '../../Alert'
+import { RegisterInputValues } from '../../../models'
 import {
+  CREATED_STATUS_CODE,
   EMAIL_REGEX_PATTERN,
-  UNAUTHORIZED_STATUS_CODE,
   useApi,
-} from '../../utils'
-import useAlert from '../Alert/hooks'
+} from '../../../utils'
+import useAlert from '../../Alert/hooks'
 
 interface Props {
-  isNewlyRegistered: boolean
+  switchToLoginAfterRegistering: () => void
 }
 
-export const SignInForm = ({ isNewlyRegistered }: Props) => {
+export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { isValid, errors },
-  } = useForm<SignInInputValues>({
+    watch,
+  } = useForm<RegisterInputValues>({
     mode: 'onChange',
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: '', password: '', password_confirmation: '' },
   })
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setCookie, _removeCookie] = useCookies()
   const [fetchFromApi] = useApi()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
 
   const isSubmitDisabled = useMemo(
-    () => !!errors?.email || !!errors?.password || !isValid,
-    [errors?.email, errors?.password, isValid]
+    () =>
+      !!errors?.email ||
+      !!errors?.password ||
+      !!errors?.password_confirmation ||
+      !isValid,
+    [errors?.email, errors?.password, errors?.password_confirmation, isValid]
   )
 
-  useEffect(() => {
-    if (!isNewlyRegistered) return
+  const passwordWatchers = watch(['password', 'password_confirmation'])
 
-    setAlertMessage({
-      message: 'You have successfully registered. Proceed to sign in.',
-      state: 'success',
-    })
-  }, [isNewlyRegistered, setAlertMessage])
-
-  const onSubmit: SubmitHandler<SignInInputValues> = useCallback(
-    async ({ email, password }) => {
+  const onSubmit: SubmitHandler<RegisterInputValues> = useCallback(
+    async ({ email, password, password_confirmation }) => {
       try {
         setIsLoading(true)
         alertMessage.message.length && onAlertClose()
 
-        const response = await fetchFromApi('/api/auth/login', 'POST', {
+        const response = await fetchFromApi('/api/auth/register', 'POST', {
           email,
           password,
+          password_confirmation,
         })
 
-        if (response.status === UNAUTHORIZED_STATUS_CODE) {
+        if (response.status !== CREATED_STATUS_CODE) {
           setAlertMessage({
-            message: 'The data you entered is incorrect. Please try again.',
+            message:
+              (response?.message as string) ??
+              'The data you entered is incorrect. Please try again.',
             state: 'error',
           })
 
           return
         }
 
-        setCookie('accessToken', response.access_token)
-        setCookie('user', JSON.stringify(response.user))
+        switchToLoginAfterRegistering()
       } catch (error) {
         setIsLoading(false)
       } finally {
@@ -88,7 +85,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
       fetchFromApi,
       onAlertClose,
       setAlertMessage,
-      setCookie,
+      switchToLoginAfterRegistering,
     ]
   )
 
@@ -107,7 +104,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
       )}
       <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
         <Stack align="center" mb={6}>
-          <Heading fontSize="4xl">Sign in to your account</Heading>
+          <Heading fontSize="4xl">Register your account</Heading>
         </Stack>
         <Box
           rounded="lg"
@@ -120,24 +117,40 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
                 <Input
-                  data-cy="signInEmailInput"
+                  data-cy="registerEmailInput"
                   type="email"
                   {...register('email', {
                     required: true,
                     pattern: EMAIL_REGEX_PATTERN,
                   })}
+                  errorBorderColor="red.500"
                   isInvalid={!!errors?.email}
                 />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
                 <Input
-                  data-cy="signInPasswordInput"
+                  data-cy="registerPasswordInput"
                   type="password"
                   {...register('password', {
                     required: true,
                   })}
                   isInvalid={!!errors?.password}
+                />
+              </FormControl>
+              <FormControl id="password_confirmation">
+                <FormLabel>Confirm your password</FormLabel>
+                <Input
+                  data-cy="registerPasswordConfirmationInput"
+                  type="password"
+                  {...register('password_confirmation', {
+                    required: true,
+                  })}
+                  isInvalid={
+                    !!errors?.password_confirmation ||
+                    (passwordWatchers[0] !== passwordWatchers[1] &&
+                      passwordWatchers[1].length > 0)
+                  }
                 />
               </FormControl>
               <Stack spacing={10}>
@@ -151,7 +164,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
                   isLoading={isLoading}
                   onClick={handleSubmit(onSubmit)}
                 >
-                  Sign in
+                  Register
                 </Button>
               </Stack>
             </Stack>

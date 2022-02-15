@@ -1,13 +1,11 @@
-// TODO: Fix how you export and import these
-
-import App from './App'
-import Alert from './Alert'
-import AuditForm from './AuditForm'
+import { App } from './App'
+import { Alert } from './Alert'
+import { AuditForm } from './AuditForm'
 import { AuditResult } from './AuditResult'
-import Breadcrumbs from './Breadcrumbs'
-import Navbar from './Navbar'
-import Layout from './Layout'
-import NoResults from './NoResults'
+import { Breadcrumbs } from './Breadcrumbs'
+import { Navbar } from './Navbar'
+import { Layout } from './Layout'
+import { NoResults } from './NoResults'
 
 export {
   App,

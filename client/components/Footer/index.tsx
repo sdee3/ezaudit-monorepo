@@ -1,6 +1,6 @@
 import { Box, Flex, theme } from '@chakra-ui/react'
 
-export default function Footer() {
+export const Footer = () => {
   return (
     <footer>
       <Box mt="10" py="10" backgroundColor={theme.colors.blue[50]}>

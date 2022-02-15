@@ -1,3 +1,1 @@
-import AuditForm from './AuditForm'
-
-export default AuditForm
+export * from './AuditForm'

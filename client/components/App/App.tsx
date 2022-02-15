@@ -2,9 +2,9 @@ import { Box, Center, Container, Flex, Grid, Heading } from '@chakra-ui/react'
 import Image from 'next/image'
 import Typewriter, { TypewriterClass } from 'typewriter-effect'
 
-import AuditForm from '../AuditForm'
+import { AuditForm } from '../AuditForm'
 
-const App = () => {
+export const App = () => {
   const onTypewriterInit = (typewriter: TypewriterClass) => {
     typewriter
       .typeString('greatest')
@@ -59,5 +59,3 @@ const App = () => {
     </Center>
   )
 }
-
-export default App

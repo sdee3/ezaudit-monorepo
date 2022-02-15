@@ -10,7 +10,7 @@ interface Props {
   links: BreadcrumbLink[]
 }
 
-const Breadcrumbs = ({ links }: Props) => {
+export const Breadcrumbs = ({ links }: Props) => {
   if (links.length === 0) return null
 
   return (
@@ -40,5 +40,3 @@ const Breadcrumbs = ({ links }: Props) => {
     </Box>
   )
 }
-
-export default Breadcrumbs

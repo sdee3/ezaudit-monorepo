@@ -5,16 +5,18 @@ import {
   FormLabel,
   Flex,
 } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
-import Alert from '../Alert'
+import { Alert } from '../Alert'
 import { EMAIL_REGEX_PATTERN, WEBSITE_REGEX_PATTERN } from '../../utils'
 import useAlert from '../Alert/hooks'
 import { useInput } from './hooks'
 import { HomeAuditInputValues } from '../../models'
+import { AuthContext } from '../Auth'
 
-const AuditForm = () => {
+export const AuditForm = () => {
+  const { user } = useContext(AuthContext)
   const {
     register,
     handleSubmit,
@@ -23,7 +25,7 @@ const AuditForm = () => {
     trigger,
   } = useForm<HomeAuditInputValues>({
     mode: 'onChange',
-    defaultValues: { domain: '', email: '' },
+    defaultValues: { domain: '', email: user?.email ?? '' },
   })
   const { alertMessage, onAlertClose, setAlertMessage } = useAlert()
 
@@ -98,5 +100,3 @@ const AuditForm = () => {
     </>
   )
 }
-
-export default AuditForm

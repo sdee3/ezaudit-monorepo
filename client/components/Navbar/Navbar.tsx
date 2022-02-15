@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 import { ROUTES } from '../../utils'
 
-const Navbar = () => {
+export const Navbar = () => {
   const { push } = useRouter()
 
   return (
@@ -45,5 +45,3 @@ const Navbar = () => {
     </nav>
   )
 }
-
-export default Navbar

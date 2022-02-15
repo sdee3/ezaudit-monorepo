@@ -13,7 +13,7 @@ type Props = AlertProps & {
   onCloseCallback: () => void
 }
 
-const Alert: FC<Props> = ({
+export const Alert: FC<Props> = ({
   alertMessage,
   alertTitle,
   onCloseCallback,
@@ -30,5 +30,3 @@ const Alert: FC<Props> = ({
     />
   </ChakraAlert>
 )
-
-export default Alert

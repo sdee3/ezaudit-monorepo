@@ -1,9 +1,9 @@
 import { Fragment } from 'react'
 
-import Navbar from '../Navbar'
-import Footer from '../Footer'
+import { Navbar } from '../Navbar'
+import { Footer } from '../Footer'
 
-export default function Layout({ children }) {
+export const Layout = ({ children }) => {
   return (
     <Fragment>
       <Navbar />

@@ -1,16 +1,17 @@
 import { Container } from '@chakra-ui/react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 
 import {
   AuditResult,
+  AuthContext,
   AuthWrapper,
   Breadcrumbs,
   Loading,
   NoResults,
-  useUser,
 } from '../../../components'
-import { ResetPasswordForm } from '../../../components/Auth/ResetPasswordForm'
+import { ResetPasswordForm } from '../../../components/Auth/components/ResetPasswordForm'
 import {
   AuditResultCategories,
   AuditResultFromAPI,
@@ -36,12 +37,12 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 ]
 
 const AuditByIdOverview = () => {
+  const { user } = useContext(AuthContext)
   const [audit, setAudit] = useState<AuditResultParsed | null>(null)
   const [email, setEmail] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const { push, query } = useRouter()
   const [fetchFromApi] = useApi()
-  const { user, clearUser } = useUser()
 
   const fetchEmailDataFromUrl = useCallback(async () => {
     const potentialEmail = query?.e
@@ -67,7 +68,6 @@ const AuditByIdOverview = () => {
       )
 
       if (resultFromAPI.status === UNAUTHORIZED_STATUS_CODE) {
-        if (user !== null) clearUser()
         throw new Error()
       }
 
@@ -84,7 +84,7 @@ const AuditByIdOverview = () => {
     } finally {
       setLoading(false)
     }
-  }, [clearUser, fetchFromApi, query?.auditId, user])
+  }, [fetchFromApi, query.auditId])
 
   useEffect(() => {
     query?.e && fetchEmailDataFromUrl()
@@ -92,11 +92,14 @@ const AuditByIdOverview = () => {
   }, [email, fetchData, fetchEmailDataFromUrl, query?.e])
 
   if (loading) return <Loading />
-  if (!user) return <AuthWrapper />
+  if (!user && !email) return <AuthWrapper />
   if (!audit && !email) return <NoResults asError404 />
 
   return (
     <>
+      <Head>
+        <title>Your Audit of {audit.domain} | EZ Audit</title>
+      </Head>
       {!email && <Breadcrumbs links={BREADCRUMB_LINKS} />}
       <Container maxW="container.xl">
         {email && <ResetPasswordForm email={email} />}

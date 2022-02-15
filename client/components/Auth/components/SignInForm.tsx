@@ -9,67 +9,73 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import Alert from '../Alert'
-import { RegisterInputValues } from '../../models'
-import { CREATED_STATUS_CODE, EMAIL_REGEX_PATTERN, useApi } from '../../utils'
-import useAlert from '../Alert/hooks'
+import { Alert } from '../../Alert'
+import { SignInInputValues } from '../../../models'
+import {
+  EMAIL_REGEX_PATTERN,
+  UNAUTHORIZED_STATUS_CODE,
+  useApi,
+} from '../../../utils'
+import useAlert from '../../Alert/hooks'
+import { AuthContext } from '..'
 
 interface Props {
-  switchToLoginAfterRegistering: () => void
+  isNewlyRegistered: boolean
 }
 
-export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
+export const SignInForm = ({ isNewlyRegistered }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { isValid, errors },
-    watch,
-  } = useForm<RegisterInputValues>({
+  } = useForm<SignInInputValues>({
     mode: 'onChange',
-    defaultValues: { email: '', password: '', password_confirmation: '' },
+    defaultValues: { email: '', password: '' },
   })
+  const { setUserData } = useContext(AuthContext)
   const [fetchFromApi] = useApi()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
 
   const isSubmitDisabled = useMemo(
-    () =>
-      !!errors?.email ||
-      !!errors?.password ||
-      !!errors?.password_confirmation ||
-      !isValid,
-    [errors?.email, errors?.password, errors?.password_confirmation, isValid]
+    () => !!errors?.email || !!errors?.password || !isValid,
+    [errors?.email, errors?.password, isValid]
   )
 
-  const passwordWatchers = watch(['password', 'password_confirmation'])
+  useEffect(() => {
+    if (!isNewlyRegistered) return
 
-  const onSubmit: SubmitHandler<RegisterInputValues> = useCallback(
-    async ({ email, password, password_confirmation }) => {
+    setAlertMessage({
+      message: 'You have successfully registered. Proceed to sign in.',
+      state: 'success',
+    })
+  }, [isNewlyRegistered, setAlertMessage])
+
+  const onSubmit: SubmitHandler<SignInInputValues> = useCallback(
+    async ({ email, password }) => {
       try {
         setIsLoading(true)
         alertMessage.message.length && onAlertClose()
 
-        const response = await fetchFromApi('/api/auth/register', 'POST', {
+        const response = await fetchFromApi('/api/auth/login', 'POST', {
           email,
           password,
-          password_confirmation,
         })
 
-        if (response.status !== CREATED_STATUS_CODE) {
+        if (response.status === UNAUTHORIZED_STATUS_CODE) {
           setAlertMessage({
-            message:
-              (response?.message as string) ??
-              'The data you entered is incorrect. Please try again.',
+            message: 'The data you entered is incorrect. Please try again.',
             state: 'error',
           })
 
           return
         }
 
-        switchToLoginAfterRegistering()
+        const { user, access_token } = response
+        setUserData(user as object, access_token as string)
       } catch (error) {
         setIsLoading(false)
       } finally {
@@ -81,7 +87,7 @@ export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
       fetchFromApi,
       onAlertClose,
       setAlertMessage,
-      switchToLoginAfterRegistering,
+      setUserData,
     ]
   )
 
@@ -100,7 +106,7 @@ export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
       )}
       <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
         <Stack align="center" mb={6}>
-          <Heading fontSize="4xl">Register your account</Heading>
+          <Heading fontSize="4xl">Sign in to your account</Heading>
         </Stack>
         <Box
           rounded="lg"
@@ -113,40 +119,24 @@ export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
                 <Input
-                  data-cy="registerEmailInput"
+                  data-cy="signInEmailInput"
                   type="email"
                   {...register('email', {
                     required: true,
                     pattern: EMAIL_REGEX_PATTERN,
                   })}
-                  errorBorderColor="red.500"
                   isInvalid={!!errors?.email}
                 />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
                 <Input
-                  data-cy="registerPasswordInput"
+                  data-cy="signInPasswordInput"
                   type="password"
                   {...register('password', {
                     required: true,
                   })}
                   isInvalid={!!errors?.password}
-                />
-              </FormControl>
-              <FormControl id="password_confirmation">
-                <FormLabel>Confirm your password</FormLabel>
-                <Input
-                  data-cy="registerPasswordConfirmationInput"
-                  type="password"
-                  {...register('password_confirmation', {
-                    required: true,
-                  })}
-                  isInvalid={
-                    !!errors?.password_confirmation ||
-                    (passwordWatchers[0] !== passwordWatchers[1] &&
-                      passwordWatchers[1].length > 0)
-                  }
                 />
               </FormControl>
               <Stack spacing={10}>
@@ -160,7 +150,7 @@ export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
                   isLoading={isLoading}
                   onClick={handleSubmit(onSubmit)}
                 >
-                  Register
+                  Sign in
                 </Button>
               </Stack>
             </Stack>

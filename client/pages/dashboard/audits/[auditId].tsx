@@ -98,7 +98,9 @@ const AuditByIdOverview = () => {
   return (
     <>
       <Head>
-        <title>Your Audit of {audit.domain} | EZ Audit</title>
+        <title>
+          Your Audit {audit?.domain ? `of ${audit.domain}` : ''}| EZ Audit
+        </title>
       </Head>
       {!email && <Breadcrumbs links={BREADCRUMB_LINKS} />}
       <Container maxW="container.xl">

@@ -8,7 +8,7 @@ export interface AuditResultFromAPI {
 
 export interface AuditResultParsed {
   id: string
-  domain: string
+  domain?: string
   email: string
   audit_result: AuditResultCategories
   date_of_request: string

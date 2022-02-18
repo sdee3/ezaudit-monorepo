@@ -2,6 +2,7 @@ beforeEach('load homepage', () => {
   cy.visit('/')
   cy.dataCy('submitAuditBtn').should('be.visible')
   cy.dataCy('submitAuditSiteInput').should('be.visible')
+  cy.dataCy('submitAuditEmailInput').should('be.visible')
 })
 
 it('sees a clickable user icon', () => {

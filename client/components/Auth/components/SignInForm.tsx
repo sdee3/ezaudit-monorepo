@@ -11,11 +11,13 @@ import {
 } from '@chakra-ui/react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useRouter } from 'next/router'
 
 import { Alert } from '../../Alert'
 import { SignInInputValues } from '../../../models'
 import {
   EMAIL_REGEX_PATTERN,
+  ROUTES,
   UNAUTHORIZED_STATUS_CODE,
   useApi,
 } from '../../../utils'
@@ -35,6 +37,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
     mode: 'onChange',
     defaultValues: { email: '', password: '' },
   })
+  const { query, replace } = useRouter()
   const { setUserData } = useContext(AuthContext)
   const { fetchFromApi } = useApi()
   const [isLoading, setIsLoading] = useState(false)
@@ -46,13 +49,25 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
   )
 
   useEffect(() => {
+    // query.pc indicates that a 'P'assword had just been 'C'hanged.
+    if (query?.pc) {
+      setAlertMessage({
+        message: 'Your password has been changed. Proceed to sign in.',
+        state: 'success',
+      })
+
+      replace({ pathname: ROUTES.dashboard, query: undefined })
+
+      return
+    }
+
     if (!isNewlyRegistered) return
 
     setAlertMessage({
       message: 'You have successfully registered. Proceed to sign in.',
       state: 'success',
     })
-  }, [isNewlyRegistered, setAlertMessage])
+  }, [isNewlyRegistered, query?.pc, setAlertMessage, replace])
 
   const onSubmit: SubmitHandler<SignInInputValues> = useCallback(
     async ({ email, password }) => {

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ResetPassword;
+use App\Mail\PasswordChanged;
 use Illuminate\Http\Request;
 use JWTAuth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 
@@ -97,21 +99,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Sends a password reset email if the User exists based on the email provided.
-     * 
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function resetPassword(Request $request)
-    {
-        // TODO:
-        Logger($request->password);
-
-        return response()
-            ->json(['message' => 'Password reset.'], 200);
-    }
-
-    /**
      * Log the user out (Invalidate the token).
      *
      * @return \Illuminate\Http\JsonResponse
@@ -158,15 +145,20 @@ class AuthController extends Controller
 
     public function changePassword(Request $request)
     {
+        $defaultPassword = 'CHANGE_ME';
         $password = bcrypt($request->password);
 
         $user = User::where('email', $request->email)->first();
+
+        if (!Hash::check($defaultPassword, $user->password)) {
+            $mailToSend = new PasswordChanged();
+            Mail::to($request->email)->cc(env('APP_TELESCOPE_EMAIL'))->send($mailToSend);
+        }
+
         $user->password = $password;
         $user->save();
 
-        $this->login(new Request(['email' => $user->email, 'password' => $request->password]));
-
-        return response()->json(['message' => 'Password changed.', 'access_token' => JWTAuth::fromUser(JWTAuth::user()), 'user' => JWTAuth::user()]);
+        return response()->json(['message' => 'Password changed.']);
     }
 
     public function loginToTelescope(Request $request)

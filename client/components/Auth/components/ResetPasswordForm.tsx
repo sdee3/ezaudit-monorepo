@@ -6,6 +6,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  Spinner,
   Stack,
   Text,
 } from '@chakra-ui/react'
@@ -29,9 +30,10 @@ import { AuthContext } from '..'
 
 interface Props {
   email?: string
+  showFormOnly?: boolean
 }
 
-export const ResetPasswordForm = ({ email }: Props) => {
+export const ResetPasswordForm = ({ email, showFormOnly = false }: Props) => {
   const {
     register,
     handleSubmit,
@@ -47,7 +49,7 @@ export const ResetPasswordForm = ({ email }: Props) => {
   })
   const { fetchFromApi } = useApi()
   const { push } = useRouter()
-  const { user, setUserData } = useContext(AuthContext)
+  const { user } = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
 
@@ -120,9 +122,7 @@ export const ResetPasswordForm = ({ email }: Props) => {
           return
         }
 
-        const { user, access_token } = response
-        setUserData(user as object, access_token as string)
-        push(ROUTES.dashboard)
+        push({ pathname: ROUTES.dashboard, query: { pc: '1' } })
       } catch (error) {
         setIsLoading(false)
       } finally {
@@ -136,11 +136,12 @@ export const ResetPasswordForm = ({ email }: Props) => {
       onAlertClose,
       push,
       setAlertMessage,
-      setUserData,
     ]
   )
 
   const { message, state } = alertMessage
+
+  if (isLoading) return <Spinner />
 
   return (
     <Flex align="center" justify="center" flexDirection="column">
@@ -206,8 +207,14 @@ export const ResetPasswordForm = ({ email }: Props) => {
             <Heading fontSize="4xl" mb={6}>
               Set your password
             </Heading>
-            <Text>Hello, {email}!</Text>
-            <Text>Before viewing your audit, please set your password.</Text>
+            {!showFormOnly && (
+              <>
+                <Text>Hello, {email}!</Text>
+                <Text>
+                  Before viewing your audit, please set your password.
+                </Text>
+              </>
+            )}
           </Stack>
           <Box rounded="lg" boxShadow="lg" p={8}>
             {email && (

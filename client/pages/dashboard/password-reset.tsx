@@ -24,7 +24,7 @@ const PasswordResetPage: NextPage = () => {
       </Head>
       <Container maxW="container.xl">
         <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
-          <ResetPasswordForm email={parsedEmail} />
+          <ResetPasswordForm email={parsedEmail} showFormOnly />
         </Stack>
       </Container>
     </Fragment>

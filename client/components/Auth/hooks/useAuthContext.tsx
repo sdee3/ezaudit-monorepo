@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 
 import { User } from '../../../models'
+import { SUCCESS_STATUS_CODE, useApi } from '../../../utils'
 
 interface AuthContextType {
   user: User | null
@@ -19,6 +20,7 @@ export const AuthContext = React.createContext<AuthContextType>({
 
 export const useAuthContext = () => {
   const [cookies, setCookie, removeCookie] = useCookies()
+  const { fetchFromApi } = useApi()
 
   const accessToken: string | null = useMemo(
     () => cookies['accessToken'],
@@ -29,6 +31,26 @@ export const useAuthContext = () => {
     () => (cookies['user'] as User) ?? null,
     [cookies]
   )
+
+  const refetchTokenOnFirstLoad = async () => {
+    if (!cookies.accessToken) return
+
+    const response = await fetchFromApi('/api/auth/validate', 'POST', {
+      token: cookies.accessToken,
+    })
+
+    if (response.status !== SUCCESS_STATUS_CODE) {
+      clearUser()
+      return
+    }
+
+    setCookie('accessToken', response.access_token)
+  }
+
+  useEffect(() => {
+    refetchTokenOnFirstLoad()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const setUserData = useCallback(
     (user: object, accessToken: string) => {

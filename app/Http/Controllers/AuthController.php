@@ -28,7 +28,8 @@ class AuthController extends Controller
                 'register',
                 'changePassword',
                 'processResetPasswordRequest',
-                'resetPassword'
+                'resetPassword',
+                'validateToken'
             ]
         ]);
     }
@@ -126,6 +127,20 @@ class AuthController extends Controller
     {
         return response()->json(JWTAuth::user());
     }
+
+    /**
+     * Validates a token stored on the frontend
+     */
+    public function validateToken(Request $request)
+    {
+        if (!$request->token) return response()->json(['message' => 'Unauthorized'], 401);
+
+        if (!auth()->check()) {
+            JWTAuth::setToken($request->token);
+            return $this->createNewToken(JWTAuth::refresh());
+        }
+    }
+
     /**
      * Get the token array structure.
      *

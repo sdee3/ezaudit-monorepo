@@ -40,6 +40,7 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::post('/validate', [AuthController::class, 'validateToken']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 
     Route::post('/change-password', [AuthController::class, 'changePassword']);
@@ -49,7 +50,6 @@ Route::group([
 
 Route::middleware('auth')->group(function () {
     Route::get('/user/{hashedEmail}/{isPasswordReset}', [UserController::class, 'verifyHashedEmail'])->withoutMiddleware('auth');
-
 
     Route::post('/audit', AuditController::class)->withoutMiddleware('auth');
 

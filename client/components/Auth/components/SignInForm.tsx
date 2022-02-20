@@ -37,7 +37,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
     mode: 'onChange',
     defaultValues: { email: '', password: '' },
   })
-  const { query, replace } = useRouter()
+  const router = useRouter()
   const { setUserData } = useContext(AuthContext)
   const { fetchFromApi } = useApi()
   const [isLoading, setIsLoading] = useState(false)
@@ -50,13 +50,13 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
 
   useEffect(() => {
     // query.pc indicates that a 'P'assword had just been 'C'hanged.
-    if (query?.pc) {
+    if (router?.query?.pc) {
       setAlertMessage({
         message: 'Your password has been changed. Proceed to sign in.',
         state: 'success',
       })
 
-      replace({ pathname: ROUTES.dashboard, query: undefined })
+      router?.replace({ pathname: ROUTES.dashboard, query: undefined })
 
       return
     }
@@ -67,7 +67,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
       message: 'You have successfully registered. Proceed to sign in.',
       state: 'success',
     })
-  }, [isNewlyRegistered, query?.pc, setAlertMessage, replace])
+  }, [isNewlyRegistered, setAlertMessage, router])
 
   const onSubmit: SubmitHandler<SignInInputValues> = useCallback(
     async ({ email, password }) => {

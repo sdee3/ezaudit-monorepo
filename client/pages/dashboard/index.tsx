@@ -1,7 +1,7 @@
 import { Box, Button, Container, Heading, Text } from '@chakra-ui/react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { Fragment, useCallback, useContext } from 'react'
+import { useCallback, useContext } from 'react'
 
 import { AuthContext, AuthWrapper } from '../../components'
 import { ROUTES, SUCCESS_STATUS_CODE, useApi } from '../../utils'
@@ -20,18 +20,10 @@ const DashboardPage = () => {
     }
   }, [clearUser, fetchFromApi, reload])
 
-  if (!user)
-    return (
-      <>
-        <Head>
-          <title>Your Dashboard | EZ Audit</title>
-        </Head>
-        <AuthWrapper />
-      </>
-    )
+  if (!user) return <AuthWrapper />
 
   return (
-    <Fragment>
+    <>
       <Head>
         <title>Your Dashboard | EZ Audit</title>
       </Head>
@@ -68,7 +60,7 @@ const DashboardPage = () => {
           </Box>
         </Box>
       </Container>
-    </Fragment>
+    </>
   )
 }
 

@@ -35,7 +35,7 @@ export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
     mode: 'onChange',
     defaultValues: { email: '', password: '', password_confirmation: '' },
   })
-  const [fetchFromApi] = useApi()
+  const { fetchFromApi } = useApi()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
 

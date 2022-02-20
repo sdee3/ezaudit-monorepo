@@ -18,11 +18,7 @@ import {
   AuditResultParsed,
   BreadcrumbLink,
 } from '../../../models'
-import {
-  ROUTES,
-  SUCCESS_STATUS_CODE,
-  UNAUTHORIZED_STATUS_CODE,
-} from '../../../utils'
+import { ROUTES, UNAUTHORIZED_STATUS_CODE } from '../../../utils'
 import { useApi } from '../../../utils'
 
 const BREADCRUMB_LINKS: BreadcrumbLink[] = [
@@ -39,22 +35,9 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 const AuditByIdOverview = () => {
   const { user } = useContext(AuthContext)
   const [audit, setAudit] = useState<AuditResultParsed | null>(null)
-  const [email, setEmail] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const { push, query } = useRouter()
-  const [fetchFromApi] = useApi()
-
-  const fetchEmailDataFromUrl = useCallback(async () => {
-    const potentialEmail = query?.e
-    if (!potentialEmail) return
-
-    const resultFromAPI = await fetchFromApi(`/api/user/${query.e}`, 'GET')
-
-    if (resultFromAPI.status === SUCCESS_STATUS_CODE) {
-      setEmail(resultFromAPI.email as string)
-      push(ROUTES.audit(query.auditId as string))
-    }
-  }, [fetchFromApi, push, query?.auditId, query?.e])
+  const { fetchFromApi, fetchEmailDataFromUrl, parsedEmail } = useApi()
 
   const fetchData = useCallback(async () => {
     if (!query?.auditId) return
@@ -87,13 +70,21 @@ const AuditByIdOverview = () => {
   }, [fetchFromApi, query.auditId])
 
   useEffect(() => {
-    query?.e && fetchEmailDataFromUrl()
-    !email && fetchData()
-  }, [email, fetchData, fetchEmailDataFromUrl, query?.e])
+    query?.e && fetchEmailDataFromUrl(query.e as string)
+    !parsedEmail && fetchData()
+    parsedEmail && push(ROUTES.audit(query.auditId as string))
+  }, [
+    fetchData,
+    fetchEmailDataFromUrl,
+    parsedEmail,
+    push,
+    query?.auditId,
+    query?.e,
+  ])
 
   if (loading) return <Loading />
-  if (!user && !email) return <AuthWrapper />
-  if (!audit && !email) return <NoResults asError404 />
+  if (!user && !parsedEmail) return <AuthWrapper />
+  if (!audit && !parsedEmail) return <NoResults asError404 />
 
   return (
     <>
@@ -102,10 +93,10 @@ const AuditByIdOverview = () => {
           Your Audit {audit?.domain ? `of ${audit.domain}` : ''}| EZ Audit
         </title>
       </Head>
-      {!email && <Breadcrumbs links={BREADCRUMB_LINKS} />}
+      {!parsedEmail && <Breadcrumbs links={BREADCRUMB_LINKS} />}
       <Container maxW="container.xl">
-        {email && <ResetPasswordForm email={email} />}
-        {!email && <AuditResult audit={audit} />}
+        {parsedEmail && <ResetPasswordForm email={parsedEmail} />}
+        {!parsedEmail && <AuditResult audit={audit} />}
       </Container>
     </>
   )

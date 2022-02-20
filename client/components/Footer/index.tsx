@@ -1,11 +1,12 @@
-import { Box, Flex, theme } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 
 export const Footer = () => {
   return (
     <footer>
-      <Box mt="10" py="10" backgroundColor={theme.colors.blue[50]}>
-        <Flex alignItems="center" justifyContent="center">
-          Copyright &copy; EZ Audit. All rights reserved.
+      <Box mt="10" py="10">
+        <Flex alignItems="center" justifyContent="center" color="gray.600">
+          Copyright &copy; {new Date().getFullYear()}, EZ Audit. All rights
+          reserved.
         </Flex>
       </Box>
     </footer>

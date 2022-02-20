@@ -9,7 +9,7 @@ import { ROUTES, SUCCESS_STATUS_CODE, useApi } from '../../utils'
 const DashboardPage = () => {
   const { user, clearUser } = useContext(AuthContext)
   const { push, reload } = useRouter()
-  const [fetchFromApi] = useApi()
+  const { fetchFromApi } = useApi()
 
   const logout = useCallback(async () => {
     const res = await fetchFromApi('/api/auth/logout', 'POST')

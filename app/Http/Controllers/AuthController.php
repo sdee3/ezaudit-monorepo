@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPassword;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use JWTAuth;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 
 class AuthController extends Controller
@@ -23,7 +24,9 @@ class AuthController extends Controller
                 'login',
                 'loginToTelescope',
                 'register',
-                'changePassword'
+                'changePassword',
+                'processResetPasswordRequest',
+                'resetPassword'
             ]
         ]);
     }
@@ -72,6 +75,40 @@ class AuthController extends Controller
             'message' => 'User successfully registered',
             'user' => $user
         ], 201);
+    }
+
+    /**
+     * Sends a password reset email if the User exists based on the email provided.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function processResetPasswordRequest(Request $request)
+    {
+        if (!User::where('email', $request->email)->first()) {
+            return response()->json(['message' => 'Invalid email address provided.'], 404);
+        }
+
+        $mailToSend = new ResetPassword($request->email);
+        Mail::to($request->email)->cc(env('APP_TELESCOPE_EMAIL'))->send($mailToSend);
+
+        return response()
+            ->json(['message' => 'Password reset email sent.'], 200);
+    }
+
+    /**
+     * Sends a password reset email if the User exists based on the email provided.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resetPassword(Request $request)
+    {
+        // TODO:
+        Logger($request->password);
+
+        return response()
+            ->json(['message' => 'Password reset.'], 200);
     }
 
     /**

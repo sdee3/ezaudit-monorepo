@@ -16,12 +16,19 @@ import { useRouter } from 'next/router'
 import { Alert } from '../../Alert'
 import { NoResults } from '../../NoResults'
 import { ResetPasswordInputValues } from '../../../models'
-import { UNAUTHORIZED_STATUS_CODE, useApi } from '../../../utils'
+import {
+  EMAIL_REGEX_PATTERN,
+  ERROR_CODES,
+  ROUTES,
+  SUCCESS_STATUS_CODE,
+  UNAUTHORIZED_STATUS_CODE,
+  useApi,
+} from '../../../utils'
 import useAlert from '../../Alert/hooks'
 import { AuthContext } from '..'
 
 interface Props {
-  email: string
+  email?: string
 }
 
 export const ResetPasswordForm = ({ email }: Props) => {
@@ -32,10 +39,14 @@ export const ResetPasswordForm = ({ email }: Props) => {
     watch,
   } = useForm<ResetPasswordInputValues>({
     mode: 'onChange',
-    defaultValues: { password: '', password_confirmation: '' },
+    defaultValues: {
+      emailForReset: '',
+      password: '',
+      password_confirmation: '',
+    },
   })
-  const [fetchFromApi] = useApi()
-  const { reload } = useRouter()
+  const { fetchFromApi } = useApi()
+  const { push } = useRouter()
   const { user, setUserData } = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
@@ -47,8 +58,46 @@ export const ResetPasswordForm = ({ email }: Props) => {
     [errors?.password, errors?.password_confirmation, isValid]
   )
 
+  const isSubmitPassResetDisabled = useMemo(
+    () => !!errors?.emailForReset && !isValid,
+    [errors?.emailForReset, isValid]
+  )
+
   const onSubmit: SubmitHandler<ResetPasswordInputValues> = useCallback(
-    async ({ password }) => {
+    async ({ emailForReset, password }) => {
+      if (emailForReset && !password) {
+        try {
+          setIsLoading(true)
+          alertMessage.message.length && onAlertClose()
+
+          const response = await fetchFromApi(
+            `/api/auth/reset-password/${emailForReset}`,
+            'GET'
+          )
+
+          if (ERROR_CODES.includes(response.status)) {
+            setAlertMessage({
+              message:
+                'An error occurred while trying to process your request. Please try again.',
+              state: 'error',
+            })
+          }
+
+          if (response.status === SUCCESS_STATUS_CODE) {
+            setAlertMessage({
+              message: 'An email with the password reset link is on its way!',
+              state: 'success',
+            })
+          }
+        } catch (error) {
+          setIsLoading(false)
+        } finally {
+          setIsLoading(false)
+        }
+
+        return
+      }
+
       try {
         setIsLoading(true)
         alertMessage.message.length && onAlertClose()
@@ -73,7 +122,7 @@ export const ResetPasswordForm = ({ email }: Props) => {
 
         const { user, access_token } = response
         setUserData(user as object, access_token as string)
-        reload()
+        push(ROUTES.dashboard)
       } catch (error) {
         setIsLoading(false)
       } finally {
@@ -85,7 +134,7 @@ export const ResetPasswordForm = ({ email }: Props) => {
       email,
       fetchFromApi,
       onAlertClose,
-      reload,
+      push,
       setAlertMessage,
       setUserData,
     ]
@@ -103,6 +152,52 @@ export const ResetPasswordForm = ({ email }: Props) => {
           mx="auto"
           maxW="lg"
         />
+      )}
+      {!email && !user && (
+        <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
+          <Stack align="center" mb={6}>
+            <Heading fontSize="4xl" mb={6}>
+              Password Reset
+            </Heading>
+            <Text>
+              To receive an email with a password reset link, please type in
+              your email below.
+            </Text>
+          </Stack>
+          <Box rounded="lg" boxShadow="lg" p={8}>
+            <form onSubmit={() => handleSubmit(onSubmit)}>
+              <Stack spacing={4}>
+                <FormControl id="emailForReset">
+                  <FormLabel>Email</FormLabel>
+                  <Input
+                    data-cy="resetPasswordEmailInput"
+                    type="email"
+                    {...register('emailForReset', {
+                      required: true,
+                      pattern: EMAIL_REGEX_PATTERN,
+                    })}
+                    isInvalid={!!errors?.emailForReset}
+                  />
+                </FormControl>
+
+                <Stack spacing={10}>
+                  <Button
+                    bg="blue.400"
+                    color="white"
+                    _hover={{
+                      bg: 'blue.500',
+                    }}
+                    disabled={isSubmitPassResetDisabled}
+                    isLoading={isLoading}
+                    onClick={handleSubmit(onSubmit)}
+                  >
+                    Submit
+                  </Button>
+                </Stack>
+              </Stack>
+            </form>
+          </Box>
+        </Stack>
       )}
       {user && <NoResults asError404 />}
       {!user && email && (

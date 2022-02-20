@@ -1,11 +1,12 @@
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useState } from 'react'
 
 import { ApiResponse } from '../../models'
-import { ERROR_CODES } from '../constants'
+import { ERROR_CODES, SUCCESS_STATUS_CODE } from '../constants'
 import { AuthContext } from '../../components'
 
 const useApi = () => {
   const { accessToken } = useContext(AuthContext)
+  const [parsedEmail, setParsedEmail] = useState<string | null>()
 
   const fetchFromApi = useCallback(
     async (
@@ -46,7 +47,23 @@ const useApi = () => {
     [accessToken]
   )
 
-  return [fetchFromApi]
+  const fetchEmailDataFromUrl = useCallback(
+    async (potentialEmail: string | undefined, isPasswordReset = false) => {
+      if (!potentialEmail) return
+
+      const resultFromAPI = await fetchFromApi(
+        `/api/user/${potentialEmail}${isPasswordReset ? '/y' : '/n'}`,
+        'GET'
+      )
+
+      if (resultFromAPI.status === SUCCESS_STATUS_CODE) {
+        setParsedEmail(resultFromAPI.email as string)
+      }
+    },
+    [fetchFromApi]
+  )
+
+  return { fetchFromApi, fetchEmailDataFromUrl, parsedEmail }
 }
 
 export { useApi }

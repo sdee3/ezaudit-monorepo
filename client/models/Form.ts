@@ -17,8 +17,9 @@ export type RegisterInputValues = {
 }
 
 export type ResetPasswordInputValues = {
-  password: string
-  password_confirmation: string
+  emailForReset?: string
+  password?: string
+  password_confirmation?: string
 }
 
 export type Errors = {

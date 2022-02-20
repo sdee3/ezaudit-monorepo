@@ -43,10 +43,12 @@ Route::group([
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 
     Route::post('/change-password', [AuthController::class, 'changePassword']);
+    Route::get('/reset-password/{email}', [AuthController::class, 'processResetPasswordRequest']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/user/{hashedEmail}', [UserController::class, 'verifyHashedEmail'])->withoutMiddleware('auth');
+    Route::get('/user/{hashedEmail}/{isPasswordReset}', [UserController::class, 'verifyHashedEmail'])->withoutMiddleware('auth');
 
 
     Route::post('/audit', AuditController::class)->withoutMiddleware('auth');

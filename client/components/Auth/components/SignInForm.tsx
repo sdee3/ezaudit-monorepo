@@ -36,7 +36,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
     defaultValues: { email: '', password: '' },
   })
   const { setUserData } = useContext(AuthContext)
-  const [fetchFromApi] = useApi()
+  const { fetchFromApi } = useApi()
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
 

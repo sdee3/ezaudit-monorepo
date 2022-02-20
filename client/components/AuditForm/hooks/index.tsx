@@ -13,7 +13,7 @@ const useInput = (
   const [apiResponseOutput, setApiResponseOutput] =
     useState<ApiResponse | null>(null)
   const { isLoading, setIsLoading } = useLoading()
-  const [fetchFromApi] = useApi()
+  const { fetchFromApi } = useApi()
 
   useEffect(() => {
     trigger()

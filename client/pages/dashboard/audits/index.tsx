@@ -39,7 +39,7 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 
 const AuditsIndex = () => {
   const [audits, setAudits] = useState<AuditResultParsed[] | null>(null)
-  const [fetchFromApi] = useApi()
+  const { fetchFromApi } = useApi()
   const { user } = useContext(AuthContext)
 
   const [isLoading, setIsLoading] = useState(false)

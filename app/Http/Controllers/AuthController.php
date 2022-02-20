@@ -7,6 +7,7 @@ use App\Mail\PasswordChanged;
 use Illuminate\Http\Request;
 use JWTAuth;
 use App\Models\User;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Validator;
@@ -165,13 +166,25 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!Hash::check($defaultPassword, $user->password)) {
+        $isPasswordSetForFirstTime = Hash::check($defaultPassword, $user->password);
+
+        if (!$isPasswordSetForFirstTime) {
             $mailToSend = new PasswordChanged();
             Mail::to($request->email)->cc(env('APP_TELESCOPE_EMAIL'))->send($mailToSend);
         }
 
         $user->password = $password;
         $user->save();
+
+        if ($isPasswordSetForFirstTime) {
+            $this->login(new Request(['email' => $user->email, 'password' => $request->password]));
+
+            return response()->json([
+                'message' => 'Password changed.',
+                'access_token' => JWTAuth::fromUser(JWTAuth::user()),
+                'user' => JWTAuth::user()
+            ]);
+        }
 
         return response()->json(['message' => 'Password changed.']);
     }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Jobs\ProcessAudit;
 use App\Models\Audit;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 
 class AuditController extends Controller
@@ -59,6 +60,16 @@ class AuditController extends Controller
 				]);
 			}
 
+			// But if a user was created and they did not set their new password
+			// - "CHANGE_ME" is still their password -
+			// we will still send the hash in the email link
+			if (!$newUser) {
+				$user = User::where('email', $emailFromRequest)->first();
+
+				if ($user && Hash::check('CHANGE_ME', $user->password)) {
+					$newUser = $user;
+				}
+			}
 
 			ProcessAudit::dispatch($correctDomain, $emailFromRequest, $newUser !== null);
 			return Response()->json(['message' => 'Audit scheduled successfully! You will receive an email once the audit is ready.'], 202);

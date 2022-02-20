@@ -49,7 +49,7 @@ export const ResetPasswordForm = ({ email, showFormOnly = false }: Props) => {
   })
   const { fetchFromApi } = useApi()
   const { push } = useRouter()
-  const { user } = useContext(AuthContext)
+  const { user, setUserData } = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const { alertMessage, setAlertMessage, onAlertClose } = useAlert()
 
@@ -119,6 +119,15 @@ export const ResetPasswordForm = ({ email, showFormOnly = false }: Props) => {
             state: 'error',
           })
 
+          setIsLoading(false)
+          return
+        }
+
+        const { user, access_token } = response
+
+        if (!!user && !!access_token) {
+          setUserData(user as object, access_token as string)
+          setIsLoading(false)
           return
         }
 
@@ -136,6 +145,7 @@ export const ResetPasswordForm = ({ email, showFormOnly = false }: Props) => {
       onAlertClose,
       push,
       setAlertMessage,
+      setUserData,
     ]
   )
 

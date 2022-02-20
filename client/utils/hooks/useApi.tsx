@@ -63,7 +63,9 @@ const useApi = () => {
     [fetchFromApi]
   )
 
-  return { fetchFromApi, fetchEmailDataFromUrl, parsedEmail }
+  const clearParsedEmail = useCallback(() => setParsedEmail(null), [])
+
+  return { fetchFromApi, fetchEmailDataFromUrl, parsedEmail, clearParsedEmail }
 }
 
 export { useApi }

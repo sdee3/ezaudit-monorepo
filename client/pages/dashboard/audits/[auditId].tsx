@@ -36,8 +36,9 @@ const AuditByIdOverview = () => {
   const { user } = useContext(AuthContext)
   const [audit, setAudit] = useState<AuditResultParsed | null>(null)
   const [loading, setLoading] = useState(false)
-  const { push, query } = useRouter()
-  const { fetchFromApi, fetchEmailDataFromUrl, parsedEmail } = useApi()
+  const { push, replace, query } = useRouter()
+  const { fetchFromApi, fetchEmailDataFromUrl, parsedEmail, clearParsedEmail } =
+    useApi()
 
   const fetchData = useCallback(async () => {
     if (!query?.auditId) return
@@ -70,7 +71,7 @@ const AuditByIdOverview = () => {
   }, [fetchFromApi, query.auditId])
 
   useEffect(() => {
-    query?.e && fetchEmailDataFromUrl(query.e as string)
+    !user && query?.e && fetchEmailDataFromUrl(query.e as string)
     !parsedEmail && fetchData()
     parsedEmail && push(ROUTES.audit(query.auditId as string))
   }, [
@@ -78,9 +79,25 @@ const AuditByIdOverview = () => {
     fetchEmailDataFromUrl,
     parsedEmail,
     push,
-    query?.auditId,
-    query?.e,
+    query.auditId,
+    query.e,
+    user,
   ])
+
+  useEffect(() => {
+    if (user && parsedEmail) {
+      clearParsedEmail()
+    }
+  }, [clearParsedEmail, parsedEmail, user])
+
+  useEffect(() => {
+    if (user && query?.e) {
+      replace({
+        pathname: ROUTES.audit(query.auditId as string),
+        query: undefined,
+      })
+    }
+  }, [replace, user, query?.e, query.auditId])
 
   if (loading) return <Loading />
   if (!user && !parsedEmail) return <AuthWrapper />

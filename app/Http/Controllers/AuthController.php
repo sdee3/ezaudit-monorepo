@@ -7,7 +7,6 @@ use App\Mail\PasswordChanged;
 use Illuminate\Http\Request;
 use JWTAuth;
 use App\Models\User;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Validator;

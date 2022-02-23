@@ -19,7 +19,8 @@
     "hot": "mix watch --hot",
     "prod": "mix --production",
     "build": "concurrently \"cd client && pnpm build",
-    "start:prod": "cd client && pm2 start -n PROD pnpm --interpreter bash -- start\"",
+    "start:prod": "cd client && pm2 start -n PROD pnpm --interpreter bash -- start:prod",
+    "start:test": "cd client && pm2 start -n TEST pnpm --interpreter bash -- start:test",
     "preinstall": "npx only-allow pnpm",
     "cy:open": "concurrently \"cd client && pnpm cy:open\"",
     "cy:run": "concurrently \"cd client && pnpm cy:run\""

@@ -35,6 +35,11 @@ After those steps, you will be able to do the following:
   * Running the frontend is **not** required due to Cypress intercepts and nock
   * Note that `pnpm cy:run` also exists, which will just run all tests in headless mode.
 
+## Setting up a production environment
+
+1. Change owner + group of `storage/*`: `chown -R www-data:www-data storage/`
+2. Setup a job listener via [Supervisor](https://dev.to/techparida/how-to-set-up-laravel-queues-on-production-4one)
+
 ## License
 
 The EZ Audit project is licensed under the [MIT license](https://opensource.org/licenses/MIT).

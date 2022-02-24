@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useCookies } from 'react-cookie'
 
 import { User } from '../../../models'
@@ -10,6 +10,8 @@ interface AuthContextType {
   setUserData: (user: object, accessToken: string) => void
   clearUser: () => void
 }
+
+export const useAuth = () => useContext(AuthContext)
 
 export const AuthContext = React.createContext<AuthContextType>({
   user: null,
@@ -32,7 +34,12 @@ export const useAuthContext = () => {
     [cookies]
   )
 
-  const refetchTokenOnFirstLoad = async () => {
+  const clearUser = useCallback(() => {
+    removeCookie('user')
+    removeCookie('accessToken')
+  }, [removeCookie])
+
+  const refetchTokenOnFirstLoad = useCallback(async () => {
     if (!cookies.accessToken) return
 
     const response = await fetchFromApi('/api/auth/validate', 'POST', {
@@ -45,7 +52,7 @@ export const useAuthContext = () => {
     }
 
     setCookie('accessToken', response.access_token)
-  }
+  }, [clearUser, cookies.accessToken, fetchFromApi, setCookie])
 
   useEffect(() => {
     refetchTokenOnFirstLoad()
@@ -59,11 +66,6 @@ export const useAuthContext = () => {
     },
     [setCookie]
   )
-
-  const clearUser = useCallback(() => {
-    removeCookie('user')
-    removeCookie('accessToken')
-  }, [removeCookie])
 
   return { AuthContext, accessToken, user, setUserData, clearUser }
 }

@@ -22,7 +22,9 @@ const DashboardPage: NextPage<Props> = ({ user }: Props) => {
 
 DashboardPage.getInitialProps = async ctx => {
   if (!ctx?.req?.headers?.cookie) return { user: null }
-  const user: User = JSON.parse(getCookieFromReq(ctx.req, 'user'))
+  const userCookie = getCookieFromReq(ctx.req, 'user')
+  const user: User | null =
+    userCookie?.length > 0 ? JSON.parse(userCookie) : null
 
   return { user }
 }

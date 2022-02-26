@@ -29,7 +29,7 @@ export const Dashboard = ({ user }: Props) => {
     if (!!userFromContext && !user) reload()
   }, [userFromContext, user, reload])
 
-  if (!user)
+  if (!user && !userFromContext)
     return (
       <Container maxW="container.xl">
         <AuthWrapper />
@@ -64,9 +64,22 @@ export const Dashboard = ({ user }: Props) => {
           <Text fontSize="3xl" fontWeight="bold" mb="4" mt="8">
             Account Settings
           </Text>
-          <Button data-cy="signOutBtn" onClick={() => logout()}>
-            Sign Out
-          </Button>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={4}
+            width="fit-content"
+          >
+            <Button
+              data-cy="changePasswordBtn"
+              onClick={() => push(ROUTES.passwordReset)}
+            >
+              Change Password
+            </Button>
+            <Button data-cy="signOutBtn" onClick={() => logout()}>
+              Sign Out
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Container>

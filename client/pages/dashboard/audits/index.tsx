@@ -13,6 +13,7 @@ import {
 import Link from 'next/link'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 import {
   AuditResultFromAPI,
@@ -40,7 +41,8 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
 const AuditsIndex = () => {
   const [audits, setAudits] = useState<AuditResultParsed[] | null>(null)
   const { fetchFromApi } = useApi()
-  const { user } = useContext(AuthContext)
+  const { user, clearUser } = useContext(AuthContext)
+  const { reload } = useRouter()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -63,10 +65,12 @@ const AuditsIndex = () => {
       setAudits(auditsParsed)
     } catch (err) {
       if (audits?.length !== 0) setAudits([])
+      clearUser()
+      reload()
     } finally {
       setIsLoading(false)
     }
-  }, [audits?.length, fetchFromApi])
+  }, [audits?.length, clearUser, fetchFromApi, reload])
 
   useEffect(() => {
     if (audits !== null) return

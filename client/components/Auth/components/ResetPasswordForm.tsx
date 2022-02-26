@@ -15,7 +15,6 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 
 import { Alert } from '../../Alert'
-import { NoResults } from '../../NoResults'
 import { ResetPasswordInputValues } from '../../../models'
 import {
   EMAIL_REGEX_PATTERN,
@@ -210,12 +209,11 @@ export const ResetPasswordForm = ({ email, showFormOnly = false }: Props) => {
           </Box>
         </Stack>
       )}
-      {user && <NoResults asError404 />}
-      {!user && email && (
+      {email && (
         <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
           <Stack align="center" mb={6}>
             <Heading fontSize="4xl" mb={6}>
-              Set your password
+              Set your new password
             </Heading>
             {!showFormOnly && (
               <>

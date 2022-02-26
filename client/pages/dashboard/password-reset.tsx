@@ -4,11 +4,13 @@ import { useRouter } from 'next/router'
 import { NextPage } from 'next/types'
 import { Fragment, useEffect } from 'react'
 
+import { useAuth } from '../../components'
 import { ResetPasswordForm } from '../../components/Auth/components'
 import { useApi } from '../../utils'
 
 const PasswordResetPage: NextPage = () => {
   const { query } = useRouter()
+  const { user } = useAuth()
   const { fetchEmailDataFromUrl, parsedEmail } = useApi()
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const PasswordResetPage: NextPage = () => {
       </Head>
       <Container maxW="container.xl">
         <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
-          <ResetPasswordForm email={parsedEmail} showFormOnly />
+          <ResetPasswordForm email={parsedEmail ?? user?.email} showFormOnly />
         </Stack>
       </Container>
     </Fragment>

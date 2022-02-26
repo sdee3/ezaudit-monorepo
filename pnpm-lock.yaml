@@ -49,6 +49,7 @@ importers:
       prettier: ^2.5.1
       react: ^17.0.2
       react-cookie: ^4.1.1
+      react-cookie-consent: ^7.3.1
       react-dom: ^17.0.2
       react-hook-form: ^7.27.0
       react-icons: ^4.3.1
@@ -67,6 +68,7 @@ importers:
       next-pwa: 5.4.4_@babel+core@7.17.5+next@12.1.0
       react: 17.0.2
       react-cookie: 4.1.1_react@17.0.2
+      react-cookie-consent: 7.3.1_react@17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-hook-form: 7.27.0_react@17.0.2
       react-icons: 4.3.1_react@17.0.2
@@ -6528,6 +6530,10 @@ packages:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
+  /js-cookie/2.2.1:
+    resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
+    dev: false
+
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -8161,6 +8167,16 @@ packages:
       react: ^15.3.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@babel/runtime': 7.17.2
+      react: 17.0.2
+    dev: false
+
+  /react-cookie-consent/7.3.1_react@17.0.2:
+    resolution: {integrity: sha512-05usKig0YYy6OLfBlQBIQk/TTi8h3PUGvs218kPO5bAb4f7D0UTjC3N1zG2UAVWFYbiI0QWyG0s3bkh2sfiW3Q==}
+    peerDependencies:
+      react: ^16.13.1 || ^17.0.0
+    dependencies:
+      js-cookie: 2.2.1
+      prop-types: 15.8.1
       react: 17.0.2
     dev: false
 

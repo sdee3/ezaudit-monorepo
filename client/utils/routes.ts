@@ -6,6 +6,7 @@ export const ROUTES = {
   userAudits: '/dashboard/audits',
   audit: (auditId: string) => `/dashboard/audits/${auditId}`,
   passwordReset: '/dashboard/password-reset',
+  termsAndConditions: '/terms-and-conditions',
 }
 
 export const getCookieFromReq = (req: IncomingMessage, cookieKey: string) => {

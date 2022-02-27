@@ -129,7 +129,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
           boxShadow="lg"
           p={8}
         >
-          <form onSubmit={() => handleSubmit(onSubmit)}>
+          <form data-cy="signInForm" onSubmit={() => handleSubmit(onSubmit)}>
             <Stack spacing={4}>
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
@@ -161,6 +161,7 @@ export const SignInForm = ({ isNewlyRegistered }: Props) => {
                   _hover={{
                     bg: 'blue.500',
                   }}
+                  data-cy="signInSubmitButton"
                   disabled={isSubmitDisabled}
                   isLoading={isLoading}
                   onClick={handleSubmit(onSubmit)}

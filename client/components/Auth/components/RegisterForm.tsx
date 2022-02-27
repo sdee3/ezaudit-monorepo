@@ -112,7 +112,7 @@ export const RegisterForm = ({ switchToLoginAfterRegistering }: Props) => {
           boxShadow="lg"
           p={8}
         >
-          <form onSubmit={() => handleSubmit(onSubmit)}>
+          <form data-cy="registerForm" onSubmit={() => handleSubmit(onSubmit)}>
             <Stack spacing={4}>
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>

@@ -8,9 +8,19 @@ interface Props {
 export const NoResults = ({ asError404 = false }: Props) => {
   return (
     <>
-      {asError404 && <Heading textAlign="center">Page Not Found</Heading>}
+      {asError404 && (
+        <Heading data-cy="noResultsAs404" textAlign="center">
+          Page Not Found
+        </Heading>
+      )}
       {!asError404 && (
-        <Text mt="8" mb="8" textAlign="center" fontWeight="bold">
+        <Text
+          data-cy="noResultAs200"
+          mt="8"
+          mb="8"
+          textAlign="center"
+          fontWeight="bold"
+        >
           No results found.
         </Text>
       )}

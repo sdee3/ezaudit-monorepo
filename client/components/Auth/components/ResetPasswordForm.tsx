@@ -175,7 +175,10 @@ export const ResetPasswordForm = ({ email, showFormOnly = false }: Props) => {
             </Text>
           </Stack>
           <Box rounded="lg" boxShadow="lg" p={8}>
-            <form onSubmit={() => handleSubmit(onSubmit)}>
+            <form
+              data-cy="resetPasswordForm"
+              onSubmit={() => handleSubmit(onSubmit)}
+            >
               <Stack spacing={4}>
                 <FormControl id="emailForReset">
                   <FormLabel>Email</FormLabel>

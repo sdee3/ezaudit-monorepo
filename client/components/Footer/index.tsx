@@ -10,7 +10,7 @@ export const Footer = () => {
 
   return (
     <footer>
-      <Box mt="10" py="10">
+      <Box mt={20} py={10}>
         <Flex
           alignItems="center"
           gap={4}

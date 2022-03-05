@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import { useContext } from 'react'
 
 import { AuditResultParsed } from '../../models'
@@ -21,7 +21,12 @@ export const AuditResult = ({ audit }: Props) => {
 
   return (
     <>
-      <Flex mb={4} justifyContent="space-between">
+      <Flex
+        mb={4}
+        flexDirection={{ base: 'column', md: 'row' }}
+        gap={4}
+        justifyContent="space-between"
+      >
         <Heading>
           Audit of{' '}
           <a href={audit.domain} target="_blank" rel="noopener noreferrer">
@@ -33,6 +38,7 @@ export const AuditResult = ({ audit }: Props) => {
           display={isPrinting ? 'none' : 'block'}
           variant="outline"
           colorScheme="facebook"
+          width="fit-content"
         >
           Export to PDF
         </Button>
@@ -41,17 +47,24 @@ export const AuditResult = ({ audit }: Props) => {
         <strong>Date of audit:</strong>{' '}
         {new Date(audit.date_of_request).toString()}
       </Text>
-      <Text>
-        Accessibility: {Math.ceil(audit.audit_result.accessibility.score * 100)}
-      </Text>
-      <Text>
-        Best Practices:{' '}
-        {Math.ceil(audit.audit_result['best-practices'].score * 100)}
-      </Text>
-      <Text>
-        Performance: {Math.ceil(audit.audit_result.performance.score * 100)}
-      </Text>
-      <Text>SEO: {Math.ceil(audit.audit_result.seo.score * 100)}</Text>
+      <Box my={8}>
+        <Text>
+          <strong>Accessibility: </strong>
+          {Math.ceil(audit.audit_result.accessibility.score * 100)}
+        </Text>
+        <Text>
+          <strong>Best Practices: </strong>
+          {Math.ceil(audit.audit_result['best-practices'].score * 100)}
+        </Text>
+        <Text>
+          <strong>Performance: </strong>
+          {Math.ceil(audit.audit_result.performance.score * 100)}
+        </Text>
+        <Text>
+          <strong>SEO: </strong>
+          {Math.ceil(audit.audit_result.seo.score * 100)}
+        </Text>
+      </Box>
     </>
   )
 }

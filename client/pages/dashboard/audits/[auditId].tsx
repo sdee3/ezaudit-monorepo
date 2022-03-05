@@ -85,18 +85,15 @@ const AuditByIdOverview = () => {
   ])
 
   useEffect(() => {
-    if (user && parsedEmail) {
-      clearParsedEmail()
-    }
+    if (user && parsedEmail) clearParsedEmail()
   }, [clearParsedEmail, parsedEmail, user])
 
   useEffect(() => {
-    if (user && query?.e) {
+    if (user && query?.e)
       replace({
         pathname: ROUTES.audit(query.auditId as string),
         query: undefined,
       })
-    }
   }, [replace, user, query?.e, query.auditId])
 
   if (loading) return <Loading />
@@ -107,7 +104,7 @@ const AuditByIdOverview = () => {
     <>
       <Head>
         <title>
-          Your Audit {audit?.domain ? `of ${audit.domain}` : ''}| EZ Audit
+          Your Audit {audit?.domain ? `of ${audit.domain}` : ''} | EZ Audit
         </title>
       </Head>
       {!parsedEmail && <Breadcrumbs links={BREADCRUMB_LINKS} />}

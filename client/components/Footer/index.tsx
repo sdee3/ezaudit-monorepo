@@ -1,9 +1,13 @@
 import { Box, Flex, Link as UiLink, Text } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useContext } from 'react'
 
+import { PrintContext } from '../../modules/Print'
 import { ROUTES } from '../../utils'
 
 export const Footer = () => {
+  const { isPrinting } = useContext(PrintContext)
+
   return (
     <footer>
       <Box mt="10" py="10">
@@ -18,7 +22,12 @@ export const Footer = () => {
             reserved.
           </Text>
           <UiLink as={Link} href={ROUTES.termsAndConditions}>
-            <Text color="blue.600" fontWeight="bold" cursor="pointer">
+            <Text
+              color="blue.600"
+              display={isPrinting ? 'none' : 'block'}
+              fontWeight="bold"
+              cursor="pointer"
+            >
               Terms and Conditions
             </Text>
           </UiLink>

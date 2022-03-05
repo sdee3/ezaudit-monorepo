@@ -3,11 +3,14 @@ import { BiUserCircle } from 'react-icons/bi'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useContext } from 'react'
 
 import { ROUTES } from '../../utils'
+import { PrintContext } from '../../modules/Print'
 
 export const Navbar = () => {
   const { push } = useRouter()
+  const { isPrinting } = useContext(PrintContext)
 
   return (
     <nav>
@@ -35,6 +38,7 @@ export const Navbar = () => {
               data-cy="userDashboardBtn"
               cursor="pointer"
               color={theme.colors.gray[600]}
+              visibility={isPrinting ? 'hidden' : 'visible'}
               onClick={() => push(ROUTES.dashboard)}
               size="3rem"
               title="User dashboard"

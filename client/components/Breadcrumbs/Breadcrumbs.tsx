@@ -1,9 +1,10 @@
 import { Box, Container, Flex } from '@chakra-ui/react'
 import Link from 'next/link'
-import { Fragment } from 'react'
+import { Fragment, useContext } from 'react'
 import { AiOutlineCaretRight } from 'react-icons/ai'
 
 import { BreadcrumbLink } from '../../models'
+import { PrintContext } from '../../modules/Print'
 import { ROUTES } from '../../utils'
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export const Breadcrumbs = ({ links }: Props) => {
+  const { isPrinting } = useContext(PrintContext)
+
   if (links.length === 0) return null
 
   return (
@@ -21,6 +24,7 @@ export const Breadcrumbs = ({ links }: Props) => {
       mb="8"
       mt="-10"
       shadow="md"
+      display={isPrinting ? 'none' : 'block'}
     >
       <Container maxW="container.xl">
         <Flex alignItems="center">

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Link, Text } from '@chakra-ui/react'
 import { useContext } from 'react'
 
 import { AuditResultParsed } from '../../models'
@@ -22,17 +22,12 @@ export const AuditResult = ({ audit }: Props) => {
   return (
     <>
       <Flex
-        mb={4}
+        mb={8}
         flexDirection={{ base: 'column', md: 'row' }}
         gap={4}
         justifyContent="space-between"
       >
-        <Heading>
-          Audit of{' '}
-          <a href={audit.domain} target="_blank" rel="noopener noreferrer">
-            {audit.domain}
-          </a>
-        </Heading>
+        <Heading>Your Audit Result</Heading>
         <Button
           onClick={handleOnPrintClick}
           display={isPrinting ? 'none' : 'block'}
@@ -43,6 +38,17 @@ export const AuditResult = ({ audit }: Props) => {
           Export to PDF
         </Button>
       </Flex>
+      <Text mb={4}>
+        <strong>Website audited: </strong>
+        <Link
+          color="blue.600"
+          href={audit.domain}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {audit.domain}
+        </Link>
+      </Text>
       <Text mb={4}>
         <strong>Date of audit:</strong>{' '}
         {new Date(audit.date_of_request).toString()}

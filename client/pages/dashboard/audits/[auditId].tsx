@@ -1,4 +1,5 @@
 import { Container } from '@chakra-ui/react'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import {
@@ -38,7 +39,12 @@ const BREADCRUMB_LINKS: BreadcrumbLink[] = [
   },
 ]
 
-const AuditByIdOverview = () => {
+interface Props {
+  META_TITLE: string
+  META_DESCRIPTION: string
+}
+
+const AuditByIdOverview = ({ META_DESCRIPTION, META_TITLE }: Props) => {
   const { user } = useContext(AuthContext)
   const [audit, setAudit] = useState<AuditResultParsed | null>(null)
   const [loading, setLoading] = useState(false)
@@ -127,10 +133,27 @@ const AuditByIdOverview = () => {
   return (
     <>
       <Head>
-        <title>
-          EZ Audit | SEO Audit result{' '}
-          {audit?.domain ? `of ${audit.domain}` : ''}
-        </title>
+        <title>{META_TITLE}</title>
+        <meta name="title" content={META_TITLE} />
+        <meta name="description" content={META_DESCRIPTION} />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://metatags.io/" />
+        <meta property="og:title" content={META_TITLE} />
+        <meta property="og:description" content={META_DESCRIPTION} />
+        <meta
+          property="og:image"
+          content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
+        />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://metatags.io/" />
+        <meta property="twitter:title" content={META_TITLE} />
+        <meta property="twitter:description" content={META_DESCRIPTION} />
+        <meta
+          property="twitter:image"
+          content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
+        />
       </Head>
       {!parsedEmail && !!user && <Breadcrumbs links={BREADCRUMB_LINKS} />}
       <Container maxW="container.xl">
@@ -144,6 +167,30 @@ const AuditByIdOverview = () => {
       </Container>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}: GetServerSidePropsContext) => {
+  const { url = '' } = req
+
+  const resultFromAPI = await fetch(
+    `${process.env.API_URL}/api/audits/${query.auditId}`
+  )
+  const resultInJson = await resultFromAPI.json()
+
+  const domain = resultInJson?.message?.domain
+
+  const META_TITLE = `EZ Audit | SEO Audit result of ${domain}`
+  const META_DESCRIPTION = `SEO Audit report of ${url} which indicates performance results based on key metrics, such as overall accessibility, load times, SEO.`
+
+  return {
+    props: {
+      META_TITLE,
+      META_DESCRIPTION,
+    },
+  }
 }
 
 export default AuditByIdOverview

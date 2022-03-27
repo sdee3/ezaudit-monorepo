@@ -36,9 +36,13 @@ Route::group([
 
 Route::middleware('auth')->group(function () {
     Route::get('/user/{hashedEmail}/{isPasswordReset}', [UserController::class, 'verifyHashedEmail'])->withoutMiddleware('auth');
-
     Route::post('/audit', AuditController::class)->withoutMiddleware('auth');
 
     Route::get('/audits', [AuditController::class, 'index']);
-    Route::get('/audits/{id}', [AuditController::class, 'single']);
+    Route::get('/audits/{id}', [AuditController::class, 'single'])->withoutMiddleware('auth');
+
+    Route::put(
+        '/audits/{id}/status/{is_public}',
+        [AuditController::class, 'togglePublicStatus']
+    );
 });

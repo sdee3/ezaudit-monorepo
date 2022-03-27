@@ -1,7 +1,13 @@
 import { Container } from '@chakra-ui/react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import {
   AuditResult,
@@ -40,6 +46,31 @@ const AuditByIdOverview = () => {
   const { fetchFromApi, fetchEmailDataFromUrl, parsedEmail, clearParsedEmail } =
     useApi()
 
+  const parseAuditFromApi = (resultFromAPI: AuditResultFromAPI) => {
+    const auditParsed: AuditResultParsed = {
+      ...resultFromAPI,
+      audit_result: JSON.parse(
+        resultFromAPI.audit_result
+      ) as AuditResultCategories,
+      is_public: resultFromAPI.is_public === 1,
+    }
+
+    return auditParsed
+  }
+
+  const handleOnSwitchChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const resultFromAPI = await fetchFromApi(
+      `/api/audits/${query.auditId}/status/${e.target.checked ? 1 : 0}`,
+      'PUT'
+    )
+
+    if (resultFromAPI.status === UNAUTHORIZED_STATUS_CODE) {
+      throw new Error()
+    }
+
+    setAudit(parseAuditFromApi(resultFromAPI.message as AuditResultFromAPI))
+  }
+
   const fetchData = useCallback(async () => {
     if (!query?.auditId) return
 
@@ -55,14 +86,7 @@ const AuditByIdOverview = () => {
         throw new Error()
       }
 
-      const auditParsed: AuditResultParsed = {
-        ...(resultFromAPI.message as AuditResultFromAPI),
-        audit_result: JSON.parse(
-          (resultFromAPI.message as AuditResultFromAPI).audit_result
-        ) as AuditResultCategories,
-      }
-
-      setAudit(auditParsed)
+      setAudit(parseAuditFromApi(resultFromAPI.message as AuditResultFromAPI))
     } catch (error) {
       setAudit(null)
     } finally {
@@ -97,20 +121,26 @@ const AuditByIdOverview = () => {
   }, [replace, user, query?.e, query.auditId])
 
   if (loading) return <Loading />
-  if (!user && !parsedEmail) return <AuthWrapper />
+  if (!user && !parsedEmail && !audit?.is_public) return <AuthWrapper />
   if (!audit && !parsedEmail) return <NoResults asError404 />
 
   return (
     <>
       <Head>
         <title>
-          Your Audit {audit?.domain ? `of ${audit.domain}` : ''} | EZ Audit
+          EZ Audit | SEO Audit result{' '}
+          {audit?.domain ? `of ${audit.domain}` : ''}
         </title>
       </Head>
-      {!parsedEmail && <Breadcrumbs links={BREADCRUMB_LINKS} />}
+      {!parsedEmail && !!user && <Breadcrumbs links={BREADCRUMB_LINKS} />}
       <Container maxW="container.xl">
         {parsedEmail && <ResetPasswordForm email={parsedEmail} />}
-        {!parsedEmail && <AuditResult audit={audit} />}
+        {!parsedEmail && (
+          <AuditResult
+            audit={audit}
+            handleOnSwitchChange={handleOnSwitchChange}
+          />
+        )}
       </Container>
     </>
   )

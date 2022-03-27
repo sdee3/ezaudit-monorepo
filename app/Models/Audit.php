@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Audit whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Audit whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $is_public
+ * @method static \Illuminate\Database\Eloquent\Builder|Audit whereIsPublic($value)
  */
 class Audit extends Model
 {
@@ -46,5 +48,6 @@ class Audit extends Model
         'email',
         'date_of_request',
         'audit_result',
+        'is_public'
     ];
 }

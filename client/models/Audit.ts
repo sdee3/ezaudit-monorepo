@@ -4,6 +4,7 @@ export interface AuditResultFromAPI {
   email: string
   audit_result: string
   date_of_request: string
+  is_public: number
 }
 
 export interface AuditResultParsed {
@@ -12,6 +13,7 @@ export interface AuditResultParsed {
   email: string
   audit_result: AuditResultCategories
   date_of_request: string
+  is_public: boolean
 }
 
 export interface AuditResultCategories {

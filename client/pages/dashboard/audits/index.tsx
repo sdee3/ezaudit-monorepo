@@ -60,6 +60,7 @@ const AuditsIndex = () => {
       ).map(r => ({
         ...r,
         audit_result: JSON.parse(r.audit_result) as AuditResultCategories,
+        is_public: r.is_public === 1,
       }))
 
       setAudits(auditsParsed)

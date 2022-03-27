@@ -21,12 +21,6 @@ class AuditController extends Controller
 	 */
 	public function __invoke()
 	{
-		// TODO: Steps:
-		// 1. Queue an audit in the background - DONE
-		// 2. Send successful response immediately - DONE
-		// 3. Cleanup
-		// 4. Profit
-
 		$data = Request()->all();
 		$domainFromRequest = $data['domain'];
 		$emailFromRequest = $data['email'];
@@ -105,11 +99,19 @@ class AuditController extends Controller
 	public function single(Request $request)
 	{
 		$user = JWTAuth::user();
-		$audit = Audit::where(['id' => $request['id'], 'email' => $user->email])->first();
+		$audit_by_id = Audit::where(['id' => $request['id']])->first();
 
-		return Response()->json([
-			'message' => $audit
-		], 200);
+		if (!$audit_by_id->is_public && !$user) {
+			return Response()->json([
+				'message' => 'Unauthorized'
+			], 401);
+		}
+
+		if ($audit_by_id->is_public || $audit_by_id->email === $user->email) {
+			return Response()->json([
+				'message' => $audit_by_id
+			], 200);
+		}
 	}
 
 	/**
@@ -128,5 +130,36 @@ class AuditController extends Controller
 		$audit->audit_result = $request['audit_result'];
 
 		$audit->save();
+	}
+
+	/**
+	 * Toggles a provided Audit's is_public state and returns the updated audit.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function togglePublicStatus(Request $request)
+	{
+		$user = JWTAuth::user();
+		$audit_to_update = Audit::where(
+			['id' => $request['id'], 'email' => $user->email]
+		)
+			->first();
+
+		if (!$audit_to_update) {
+			return Response()->json([
+				'message' => 'Unauthorized'
+			], 401);
+		}
+
+		$is_public = $request['is_public'];
+
+		$audit_to_update->is_public = $is_public;
+		$audit_to_update->save();
+
+		$updated_audit = $audit_to_update->fresh();
+
+		return Response()->json([
+			'message' => $updated_audit
+		], 200);
 	}
 }
